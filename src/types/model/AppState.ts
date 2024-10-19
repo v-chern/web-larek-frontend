@@ -26,7 +26,7 @@ export enum AppStateModals {
     none = 'modal:none',
     product = 'modal:product',
     basket = 'modal:basket',
-    address = 'modal:address',
+    address = 'modal:order',
     contacts = 'modal:contacts',
     success = 'modal:success'
 }
