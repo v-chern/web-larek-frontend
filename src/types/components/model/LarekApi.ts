@@ -35,13 +35,13 @@ export interface IProductCatalog {
 
 export interface IBasket extends IProductCatalog{
     totalSum: number;
-    addProduct(id: string): void;
+    addProduct(product: IProduct): void;
     removeProduct(id: string): void;
 }
 
 export interface IOrder {
     basket: IBasket;
-    paymentType: TPaymentType;
+    paymentType: TPaymentType | null;
     deliveryAddress: string;
     email: string;
     phoneNumber: string;
@@ -49,8 +49,9 @@ export interface IOrder {
     setContacts(contacts: TContacts): void;
 }
 
-export interface IOrderResult extends IOrder {
+export interface IOrderResult{
     id: string;
+    totalSum: number;
 }
 
 export interface ILarekAPI {

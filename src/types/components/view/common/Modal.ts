@@ -1,3 +1,5 @@
+//Modal.ts
+
 import { IView } from "../../base/View";
 
 export interface ModalData<C> {

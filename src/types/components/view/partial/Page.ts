@@ -1,3 +1,5 @@
+//page.ts
+
 import { IClickable } from "../../base/View";
 
 export interface PageData {

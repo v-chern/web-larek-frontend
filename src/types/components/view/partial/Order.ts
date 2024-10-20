@@ -1,4 +1,4 @@
-import { IChangeable, IClickable } from "../../base/View";
+import { IClickable } from "../../base/View";
 import { TPaymentType } from "../../model/LarekApi";
 
 export interface OrderData {

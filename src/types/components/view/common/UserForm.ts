@@ -1,3 +1,5 @@
+//UserForm.ts
+
 export interface UserFormData<T> {
     data: T;
     isActive: boolean;

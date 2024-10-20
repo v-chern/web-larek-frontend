@@ -56,15 +56,23 @@ export interface AppState {
     
     //API actions
     loadProducts(): Promise<void>;
+    placeOrder(order: IOrder): Promise<IOrderResult>;
 
     //User actions
-    selectProduct(id: string): void;
     addToBasket(id: string): void;
     removeFromBasket(id: string): void;
+    fillAddress(address: TPaymentAddress): void;
+    fillContacts(contats: TContacts): void;
 
     //UI operations
     openModal(modal: AppStateModals): void;
-    fillAddress(address: TPaymentAddress): void;
-    fillContacts(contats: TContacts): void;
-    placeOrder(order: IOrder): Promise<IOrderResult>;
+}
+
+export interface AppStateSettings {
+	formatCurrency(value: number): string;
+	onChange(changed: AppStateChanges): void;
+}
+
+export interface AppStateConstructor {
+	new (api: ILarekAPI, settings: AppStateSettings): AppState;
 }
