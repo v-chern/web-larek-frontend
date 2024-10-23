@@ -30,23 +30,16 @@ export interface IProduct {
 export interface IProductCatalog {
     items: Map<string, IProduct>;
     itemsCount: number
-    getProduct(id: string): IProduct;
-}
-
-export interface IBasket extends IProductCatalog{
-    totalSum: number;
-    addProduct(product: IProduct): void;
-    removeProduct(id: string): void;
-}
+ }
 
 export interface IOrder {
-    basket: IBasket;
+    items: string[];
+    itemsCount: number;
+    totalSum: number;
     paymentType: TPaymentType | null;
     deliveryAddress: string;
     email: string;
     phoneNumber: string;
-    setPaymentAddress(pmtAddress: TPaymentAddress): void;
-    setContacts(contacts: TContacts): void;
 }
 
 export interface IOrderResult{

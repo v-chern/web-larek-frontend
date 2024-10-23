@@ -12,7 +12,7 @@
 Важные файлы:
 - src/pages/index.html — HTML-файл главной страницы
 - src/index.ts — точка входа приложения
-- src/styles/styles.scss — корневой файл стилей
+- src/scss/styles.scss — корневой файл стилей
 - src/utils/constants.ts — файл с константами
 - src/utils/utils.ts — файл с утилитами
 - src/types/settings.ts - файл с определением типов настроек приложения
@@ -171,60 +171,8 @@ yarn build
 
 ## Описание классов модели
 
-### Класс `Product`
-- Наследуется от интерфейса `IProductCatalog`
-- Представляет данные товаре, доступном в интернет-магазине. Синхронизирован с API `GET {{baseUrl}}/product/<id>`
-- **Атрибуты**:
-  - `id: string`: Идентификатор товара.
-  - `category: string`: Категория товара.
-  - `title: string`: Название товара.
-  - `description: string`: Описание товара.
-  - `image: string`:  Путь к изображению товара.
-  - `price: number`: Цена товара.
-
-### Класс `ProductCatalog`
-- Наследуется от интерфейса `IProductCatalog`
-- Представляет данные о каталоге товаров, доступных в интернет-магазине. Синхронизирован с API `GET {{baseUrl}}/product`
-- **Атрибуты**:
-  - `items: Map<string, IProduct>`: Список товаров в каталоге.
-  - `itemsCount: number`: Общее количество товаров в каталоге. 
-- **Методы**:
-  - `getProduct(id: string): IProduct`: Возвращает объект товара по его `id`.
-
-### Класс `Basket`
-- Наследуется от интерфейса `IProductCatalog`
-- Представляет корзину покупателя.
-- **Поля**:
-  - `items: Map<string, IProduct>`: Список товаров в корзине покупателя.
-  - `itemsCount: number`: Общее количество товаров в корзине покупателя. 
-  - `totalSum: number`: Общая сумма товаров в корзине.
-- **Методы**:
-  - `addProduct(product: IProduct): void`: Добавляет товар в корзину. Особенность текущий реализации не позволяет добавлять в корзину несколько одинаковых товаров.
-    - Если `product.id` товара отсутствует в списке товаров: добавляет товар в список товаров, увеличивает общее количество на один и общую сумму товаров в корзине на цену товара.
-  - `removeProduct(id: string): void`: Удаляет товар из корзины
-    - Если `id` присутствует в списке товаров: удаляет товар из списка, уменьшает общее количество товаров на один и общую сумму товаров в корзине на центу товара.
-
-### Класс `Order`
-- Наследуется от интерфейса `IOrder`
-- Агрегирует информацию, необходимую для осуществления заказа. Соответстует API `POST {{baseUrl}}/order`
-- **Поля**:
-  - `basket: IBasket`: Корзина с выбранными товара.
-  - `paymentType: TPaymentType | null`: Выбранный тип оплаты.
-  - `deliveryAddress: string`: Адрес доставки.
-  - `email: string`: Электронная почта клиента.
-  - `phoneNumber: string`: Номер телефона клиента.
-- **Методы**:
-  - `setPaymentAddress(pmtAddress: TPaymentAddress): void`: Устанавливает адрес доставки и тип оплаты.
-  - `setContacts(contacts: TContacts): void`: Добавляет контактную информацию покупателя в заказ.
-
-### Класс `OrderResult`
-- Содержит результат создания заказа. Соответствует результату вызова API `POST {{baseUrl}}/order`
-- **Поля**:
-  - `id: string`: Уникальный идентификатор заказа.
-  - `totalSum: number`: Общая сумма товаров в заказе
-
 ### Класс `LarekAPI`
-- Предоставляет интерфейсы для взаимодействия с API онлайн магазина.
+- Предоставляет интерфейсы для взаимодействия с API онлайн-магазина.
 - **Методы**:
   - `getProducts(): Promise<IProductCatalog>`: Получает каталог товаров магазина через вызов API `GET {{baseUrl}}/product`
   - `getProductDetails(id: string): Promise<IProduct>`: Получает подробную информацию о товаре через вызов `GET {{baseUrl}}/product/<id>`
@@ -232,23 +180,22 @@ yarn build
 
 ### Класс `AppState`
 - Описывает состояние приложения.
-- **Поля**:
-  - `products?: IProductCatalog`: Каталог товаров, загруженный с сервера.
-  - `selectedProduct: IProduct | null`: Текущий выбранный товар для детального просмотра.
-  - `userBasket: IBasket`: Корзина пользователя.
-  - `userOrder: IOrder | null`: Текущий оформляемый заказ.
+- **Атрибуты**:
+  - `products: IProductCatalog`: Каталог товаров, загруженный с сервера.
+  - `userOrder: IOrder`: Корзина и данные заказа покупателя.
   - `openedModal: AppStateModals`: Текущее открытое модальное окно.
-  - `isOrderReady: boolean`: Флаг, указывающий, готов ли заказ к отправке.
 - **Методы**:
-  - `loadProducts(): Promise<void>`: Загружает список товаров через API с сервера
-  - `placeOrder(order: IOrder): Promise<IOrderResult>`: Создает заказ пользователя через API
-  - **Методы, поддверживающие процессы приложения**
-  - `addToBasket(id: string): void`: Добавляет товар в корзину по `id`
-  - `removeFromBasket(id: string): void`: Удаляет товар из корзины по `id`
-  - `fillAddress(address: TPaymentAddress): void`: Добавляет в заказ данные по способу оплаты и адресу доставки
-  - `fillContacts(contats: TContacts): void`: Добавляет в заказ контактные данные покупателя
-  - **Методы, поддерживающие UI**
-  - `openModal(modal: AppStateModals): void`: Открывает выбранное пользователем модельное окно
+  - `setProductCatalog(products: IProductCatalog): void`: Создает каталог товаров.
+  - `addToBasket(id: string): void`: Добавляет товар в корзину по `id`.
+  - `removeFromBasket(id: string): void`: Удаляет товар из корзины по `id`.
+  - `getBasketTotal(): number`: Возвращает число товаров в корзине.
+  - `getBasketItems(): IProduct[]`: Возвращает список товаров в корзине.
+  - `fillAddress(address: TPaymentAddress): void`: Добавляет в заказ данные по способу оплаты и адресу доставки.
+  - `fillContacts(contats: TContacts): void`: Добавляет в заказ контактные данные покупателя.
+  - `isOrderReady(): boolean`: Проверяет, что заказ корректно сформирован.
+  - `getOrder(): IOrder`: Возвращает данные заказа покупателя.
+  - `openModal(modal: AppStateModals): void`: Открывает выбранное пользователем модельное окно.
+  - `formatCurrency(value: number): string`: Конвертирует цену/сумму в строковое представление с учетом валюты.
 
 ### Класс `AppStateSettings`
 - Отвечает за настройку состояния приложения
