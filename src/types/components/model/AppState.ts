@@ -3,7 +3,6 @@ import {
     TContacts,
     IProduct,
     IProductCatalog,
-    IBasket,
     IOrder,
     IOrderResult,
     ILarekAPI
@@ -39,13 +38,12 @@ export enum AppStateChanges {
 }
 
 //Application data model
-export interface AppState {
+export interface IAppState {
     //Server data
     products?: IProductCatalog;
 
     // User actioned data
     selectedProduct: IProduct | null;
-    userBasket: IBasket;
     userOrder: IOrder | null;
 
     // UI states
@@ -55,24 +53,28 @@ export interface AppState {
     isValidationError: boolean;
     
     //API actions
-    loadProducts(): Promise<void>;
+    loadProducts(): Promise<IProductCatalog>;
     placeOrder(order: IOrder): Promise<IOrderResult>;
 
-    //User actions
+    //Model operations 
+    setProductCatalog(products: IProductCatalog): void;
     addToBasket(id: string): void;
     removeFromBasket(id: string): void;
+    getBasketTotal(): number;
+    getBasketItems(): IProduct[];
     fillAddress(address: TPaymentAddress): void;
     fillContacts(contats: TContacts): void;
+    getOrder(): IOrder;
 
     //UI operations
     openModal(modal: AppStateModals): void;
 }
 
-export interface AppStateSettings {
+export interface IAppStateSettings {
 	formatCurrency(value: number): string;
 	onChange(changed: AppStateChanges): void;
 }
 
-export interface AppStateConstructor {
-	new (api: ILarekAPI, settings: AppStateSettings): AppState;
+export interface IAppStateConstructor {
+	new (api: ILarekAPI, settings: IAppStateSettings): IAppState;
 }

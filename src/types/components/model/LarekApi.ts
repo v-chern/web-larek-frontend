@@ -49,6 +49,6 @@ export interface IOrderResult{
 
 export interface ILarekAPI {
     getProducts: () => Promise<IProductCatalog>;
-    getProductDetials: (id: string) => Promise<IProduct>;
-    placeOrder: (order: IOrder) => Promise<IOrderResult>;
+    getProductDetails: (id: string) => Promise<IProduct>;
+    createOrder: (order: object) => Promise<IOrderResult>;
 }

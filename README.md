@@ -183,16 +183,16 @@ yarn build
 - **Атрибуты**:
   - `products: IProductCatalog`: Каталог товаров, загруженный с сервера.
   - `userOrder: IOrder`: Корзина и данные заказа покупателя.
+  - `isOrderReady(): boolean`: Проверяет, что заказ корректно сформирован.
   - `openedModal: AppStateModals`: Текущее открытое модальное окно.
 - **Методы**:
   - `setProductCatalog(products: IProductCatalog): void`: Создает каталог товаров.
-  - `addToBasket(id: string): void`: Добавляет товар в корзину по `id`.
-  - `removeFromBasket(id: string): void`: Удаляет товар из корзины по `id`.
+  - `addToBasket(id: string): void`: Добавляет товар к заказу по `id`.
+  - `removeFromBasket(id: string): void`: Удаляет товар из заказа по `id`.
   - `getBasketTotal(): number`: Возвращает число товаров в корзине.
   - `getBasketItems(): IProduct[]`: Возвращает список товаров в корзине.
   - `fillAddress(address: TPaymentAddress): void`: Добавляет в заказ данные по способу оплаты и адресу доставки.
   - `fillContacts(contats: TContacts): void`: Добавляет в заказ контактные данные покупателя.
-  - `isOrderReady(): boolean`: Проверяет, что заказ корректно сформирован.
   - `getOrder(): IOrder`: Возвращает данные заказа покупателя.
   - `openModal(modal: AppStateModals): void`: Открывает выбранное пользователем модельное окно.
   - `formatCurrency(value: number): string`: Конвертирует цену/сумму в строковое представление с учетом валюты.
