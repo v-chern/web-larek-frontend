@@ -60,7 +60,7 @@ export interface Settings {
     }
 
     //model settings 
-    appState: {
-        formatCurrency: (value: number) => string;
-    }
+    //appState: {
+    //    formatCurrency: (value: number) => string;
+    //}
 }

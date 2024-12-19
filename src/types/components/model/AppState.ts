@@ -53,11 +53,12 @@ export interface IAppState {
     isValidationError: boolean;
     
     //API actions
-    loadProducts(): Promise<IProductCatalog>;
+    //loadProducts(): Promise<IProductCatalog>;
+    loadProductCatalog(): Promise<IProductCatalog>;
     placeOrder(order: IOrder): Promise<IOrderResult>;
 
     //Model operations 
-    setProductCatalog(products: IProductCatalog): void;
+    //setProductCatalog(products: IProductCatalog): void;
     addToBasket(id: string): void;
     removeFromBasket(id: string): void;
     getBasketTotal(): number;

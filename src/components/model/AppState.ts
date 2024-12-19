@@ -32,54 +32,45 @@ export class AppState implements IAppState {
     
     //TODO: constructor(api: ILarekAPI, settings: IAppStateSettings) {
     constructor(api: ILarekAPI) {
-        //super();
         this.api = api;
 
         this.userOrder = {
             items: [],
-            itemsCount: 0,
-            totalSum: 0,
-            paymentType: null,
-            deliveryAddress: '',
+            total: 0,
+            payment: TPaymentType.cash,
+            address: '',
             email: '',
-            phoneNumber: ''
+            phone: ''
         }
     }
 
+    /*
     loadProducts(): Promise<IProductCatalog> { 
         return this.api.getProducts()
             .then((products) => {
                 this.products = products;
                 return products
             });
+    }*/
+
+    loadProductCatalog(): Promise<IProductCatalog> {
+        return this.api.getProducts()
+            .then((products) => {
+                this.products = products;
+                //message to events
+                return products;
+            });
     }
 
     placeOrder(order: IOrder): Promise<IOrderResult> {
-        const testOrder = {
-            "payment": "online",
-            "email": "test@test.ru",
-            "phone": "+71234567890",
-            "address": "Spb Vosstania 1",
-            "total": 2200,
-            "items": [
-                "854cef69-976d-4c2a-a18c-2aa45046c390",
-                "c101ab44-ed99-4a54-990d-47aa2bb4e7d9"
-            ]
-        };
-        return this.api.createOrder(testOrder);
-    }
-
-    setProductCatalog(products: IProductCatalog): void {
-        this.products = products;
-        //message to events
+        return this.api.createOrder(order);
     }
 
     addToBasket(id: string): void {
         const productDetails = this.products.items.get(id);
         if (productDetails) {
             this.userOrder.items.push(id);
-            this.userOrder.itemsCount += 1;
-            this.userOrder.totalSum += productDetails.price;
+            this.userOrder.total += productDetails.price;
         }
     }
 
@@ -88,13 +79,12 @@ export class AppState implements IAppState {
         const itemIdx = this.userOrder.items.indexOf(id);
         if (itemIdx != -1) {
             this.userOrder.items.splice(itemIdx, 1);
-            this.userOrder.itemsCount -= 1;
-            this.userOrder.totalSum -= productDetails.price;
+            this.userOrder.total -= productDetails.price;
         }
     }
 
     getBasketTotal(): number {
-        return this.userOrder.itemsCount;
+        return this.userOrder.items.length;
     }
 
     getBasketItems(): IProduct[] {
@@ -106,11 +96,13 @@ export class AppState implements IAppState {
     }
 
     fillAddress(address: TPaymentAddress): void {
-        
+        this.userOrder.address = address.address;
+        this.userOrder.payment = address.payment;        
     }
 
-    fillContacts(contats: TContacts): void {
-        
+    fillContacts(contacts: TContacts): void {
+        this.userOrder.email = contacts.email;
+        this.userOrder.phone = contacts.phoneNumber;
     }
 
     getOrder(): IOrder {

@@ -34,12 +34,11 @@ export interface IProductCatalog {
 
 export interface IOrder {
     items: string[];
-    itemsCount: number;
-    totalSum: number;
-    paymentType: TPaymentType | null;
-    deliveryAddress: string;
+    total: number;
+    payment: TPaymentType;
+    address: string;
     email: string;
-    phoneNumber: string;
+    phone: string;
 }
 
 export interface IOrderResult{

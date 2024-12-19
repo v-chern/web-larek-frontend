@@ -7,8 +7,7 @@ export class LarekApi extends Api implements ILarekAPI {
     }
 
     getProducts(): Promise<IProductCatalog> {
-        //return this.get('/product') as Promise<IProductCatalog>;
-        return this.get('/product').then((data: ApiListResponse<IProduct>) => {
+           return this.get('/product').then((data: ApiListResponse<IProduct>) => {
             const itemsMap = new Map<string, IProduct>(
                 data.items.map((item) => [item.id, item])
             );
@@ -21,10 +20,13 @@ export class LarekApi extends Api implements ILarekAPI {
     }
 
     getProductDetails(id: string): Promise<IProduct> {
-        return this.get(`/product/${id}`) as Promise<IProduct>;
+        return this.get(`/product/${id}`)
+            .then((data: IProduct) => {
+                return data;
+            })
     }
 
-    createOrder(order: object): Promise<IOrderResult> {
+    createOrder(order: IOrder): Promise<IOrderResult> {
         return this.post(`/order`, order) as Promise<IOrderResult>;
     }
 }
