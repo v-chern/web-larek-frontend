@@ -12,6 +12,7 @@ export interface ModalData<C> {
 export interface ModalSettings<C> {
     close: string;
     content: string;
+    message: string;
     contentView: IView<C>;
     actions: HTMLElement[];
     activeClass: string;
