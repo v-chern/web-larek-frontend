@@ -6,6 +6,7 @@ export interface Settings {
         wrapper: string;
         counter: string;
         basket: string;
+        lockedClass: string;
     }
 
     gallerySelector: string;
@@ -60,7 +61,7 @@ export interface Settings {
     }
 
     //model settings 
-    //appState: {
-    //    formatCurrency: (value: number) => string;
-    //}
+    appState: {
+        formatCurrency: (value: number) => string;
+    }
 }
