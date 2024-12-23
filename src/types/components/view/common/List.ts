@@ -14,6 +14,5 @@ export interface ListData<T> {
 
 export interface ListSettings<T> {
     item: IView<T, unknown>;
-    activeItemClass: string; //check if will be used
     itemClass: string;
 }

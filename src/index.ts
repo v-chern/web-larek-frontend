@@ -8,40 +8,61 @@ import { TPaymentAddress, TContacts, TPaymentType } from './types/components/mod
 import { IAppStateSettings } from './types/components/model/AppState';
 
 import { EventEmitter } from './components/base/events';
-
+import { MainScreen } from './components/view/screen/Main';
+import { AppStateEmitter } from './components/model/AppStateEmitter';
+import { SETTINGS } from './utils/constants';
+import { MainController } from './components/controller/MainController';
 
 const API_BASE_URL = 'https://larek-api.nomoreparties.co/api/weblarek';
 const api = new LarekApi(API_BASE_URL);
+const app = new AppStateEmitter(api, SETTINGS.appState, AppState);
+const main = new MainScreen(new MainController(app.model));
 
-const app : AppState = new AppState(api);
+app.model
+    .loadProductCatalog()
+    .then(() => {
+        main.items = Array.from(app.model.products.items.values()).map((item) => {
+            return {
+                id: item.id,
+                category: item.category,
+                title: item.title,
+                image: item.image,
+                price: ''
+            }})
+    })
+
+
+
+/*const appModel : AppState = new AppState(api);
 
 async function modelTest() {
     console.log('Test: Products testing');
-    await app.loadProductCatalog();
-    console.log(app.products);
+    await appModel.loadProductCatalog();
+    console.log(appModel.products);
 
     console.log('Test: Adding items to basket');
-    app.addToBasket("f3867296-45c7-4603-bd34-29cea3a061d5");
-    console.log('Basket Items: ', app.getBasketItems());
-    console.log('Basket Count: ', app.getBasketTotal());
-    console.log('User order: ', app.getOrder());
+    appModel.addToBasket("f3867296-45c7-4603-bd34-29cea3a061d5");
+    console.log('Basket Items: ', appModel.getBasketItems());
+    console.log('Basket Count: ', appModel.getBasketTotal());
+    console.log('User order: ', appModel.getOrder());
 
     console.log('Test: Adding user details');
     const contacts : TContacts = {
         email: 'test@test.eu',
         phoneNumber: '+7777777777'
     }
-    app.fillContacts(contacts);
+    appModel.fillContacts(contacts);
     const pmt : TPaymentAddress = {
         payment: TPaymentType.cash,
         address: 'some long address 7'
     }
-    app.fillAddress(pmt);    
-    console.log('User order: ', app.getOrder());
+    appModel.fillAddress(pmt);    
+    console.log('User order: ', appModel.getOrder());
 
     console.log('Test: placing order')
-    app.placeOrder(app.getOrder())
+    appModel.placeOrder(appModel.getOrder())
         .then((res) => {console.log(res)});
 }
 
 modelTest();
+*/

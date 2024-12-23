@@ -13,22 +13,6 @@ import {
     > {
     protected _elements: ElementsMap;
 
-    setActiveElement(element: HTMLElement) {
-        const elements = Object.values(this._elements);
-        if (elements.includes(element)) {
-            elements.map((element) => 
-                element.classList.remove(this.settings.activeItemClass)
-            );
-            element.classList.add(this.settings.activeItemClass);
-        }
-    }
-
-    setActiveItem(id: string) {
-        if (this._elements[id]) {
-            this.setActiveElement(this._elements[id]);
-        }
-    }
-
     set items(items: T[]) {
         this._elements = items.reduce<ElementsMap>((result, item) => {
             const el = this.settings.item.copy();

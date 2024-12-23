@@ -31,10 +31,9 @@ export enum AppStateModals {
 }
 
 export enum AppStateChanges {
-    selectedProduct,
-    modal,
-    basket,
-    order
+    modal = 'change:modal',
+    basket = 'change:basket',
+    order = 'change:order'
 }
 
 //Application data model
