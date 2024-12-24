@@ -10,24 +10,25 @@ import { IAppStateSettings } from './types/components/model/AppState';
 import { EventEmitter } from './components/base/events';
 import { MainScreen } from './components/view/screen/Main';
 import { AppStateEmitter } from './components/model/AppStateEmitter';
-import { SETTINGS } from './utils/constants';
+import { SETTINGS, API_URL, CDN_URL } from './utils/constants';
 import { MainController } from './components/controller/MainController';
 
-const API_BASE_URL = 'https://larek-api.nomoreparties.co/api/weblarek';
-const api = new LarekApi(API_BASE_URL);
+const api = new LarekApi(API_URL);
 const app = new AppStateEmitter(api, SETTINGS.appState, AppState);
 const main = new MainScreen(new MainController(app.model));
-
+//TODO: Image address нужно формировать из CDN переменной
 app.model
     .loadProductCatalog()
     .then(() => {
+        //TODO: проверить константы. Почему то ошибка в функции рендер el.render в лист вью
         main.items = Array.from(app.model.products.items.values()).map((item) => {
+            console.log(CDN_URL + item.image);
             return {
                 id: item.id,
                 category: item.category,
                 title: item.title,
                 image: item.image,
-                price: ''
+                price: '12 туг'
             }})
     })
 

@@ -22,7 +22,6 @@ export class MainScreen extends Screen<MainData, MainSettings> {
             ...SETTINGS.pageSettings,
             onClick: this.settings.onOpenBasket,
         });
-
         this.gallery = new ListView<CardData>(
             ensureElement(SETTINGS.gallerySelector), {
                 ...SETTINGS.gallerySettings,
@@ -32,7 +31,6 @@ export class MainScreen extends Screen<MainData, MainSettings> {
                 })
             }
         );
-
         this.element = this.page.element;
     }
 

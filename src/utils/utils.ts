@@ -1,3 +1,8 @@
+import { 
+    ElementChild,
+    ElementProps 
+} from "../types/html";
+
 export function pascalToKebab(value: string): string {
     return value.replace(/([a-z0–9])([A-Z])/g, "$1-$2").toLowerCase();
 }
@@ -79,6 +84,31 @@ export function setElementData<T extends Record<string, unknown> | object>(el: H
 }
 
 /**
+ * Устанавливает свойства элемента
+ */
+
+export function setElementProps<T extends HTMLElement>(
+    element: T,
+    props: ElementProps<T>
+) { 
+    for (const key in props) {
+        const val = props[key];
+        if (isPlainObject(val) && key === 'dataset') {
+            setElementData(element, val);
+        } else {
+            //element[key] = isBoolean(val) ? val : String(val);
+        }
+    } 
+}
+
+/**
+ * Устанавливает дочерние элементы
+ */
+export function setElementChildren(root: HTMLElement, children: ElementChild) {
+	root.replaceChildren(...(Array.isArray(children) ? children : [children]));
+}
+
+/**
  * Получает типизированные данные из dataset атрибутов элемента
  */
 export function getElementData<T extends Record<string, unknown>>(el: HTMLElement, scheme: Record<string, Function>): T {
@@ -100,6 +130,10 @@ export function isPlainObject(obj: unknown): obj is object {
 
 export function isBoolean(v: unknown): v is boolean {
     return typeof v === 'boolean';
+}
+
+export function isChildElement(x: unknown): x is ElementChild {
+    return x instanceof HTMLElement || Array.isArray(x);
 }
 
 /**

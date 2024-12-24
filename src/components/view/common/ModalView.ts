@@ -52,9 +52,9 @@ export class ModalView<C> extends View<ModalData<C>, ModalSettings<C>> {
     set message(value: string | undefined) {
         if (value) {
             this.setValue(this.settings.message, value);
-            this.serVisibility(this.settings.message, true);
+            this.setVisibility(this.settings.message, true);
         } else {
-            this.serVisibility(this.settings.message, false);
+            this.setVisibility(this.settings.message, false);
         }
     }
 

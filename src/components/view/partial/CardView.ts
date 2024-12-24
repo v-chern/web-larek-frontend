@@ -12,7 +12,7 @@ export class CardView extends View<CardData, CardSettings> {
         this.settings.onClick({event, item: this.id});
     }
     
-    set categoty(value: string) {
+    set category(value: string) {
         this.setValue(this.settings.category, value);
     }
     

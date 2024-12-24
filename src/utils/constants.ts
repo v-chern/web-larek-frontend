@@ -15,7 +15,7 @@ export const SETTINGS: Settings = {
 
     gallerySelector: '.gallery',
     gallerySettings: {
-        itemClass: '.gallery__item',
+        itemClass: 'gallery__item',
     },
 
     cardTemplate: '#card-catalog',
