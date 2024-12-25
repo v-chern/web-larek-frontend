@@ -12,7 +12,8 @@ import {
 import { 
     AppStateModals, 
     IAppStateSettings, 
-    IAppState 
+    IAppState, 
+    AppStateChanges
 } from "../../types/components/model/AppState";
 
 
@@ -30,9 +31,10 @@ export class AppState implements IAppState {
     private api: ILarekAPI;
     private settings: IAppStateSettings;
     
-    //TODO: constructor(api: ILarekAPI, settings: IAppStateSettings) {
-    constructor(api: ILarekAPI) {
+    constructor(api: ILarekAPI, settings: IAppStateSettings) {
+    //constructor(api: ILarekAPI) {
         this.api = api;
+        this.settings = settings;
 
         this.userOrder = {
             items: [],
@@ -44,26 +46,29 @@ export class AppState implements IAppState {
         }
     }
 
-    /*
-    loadProducts(): Promise<IProductCatalog> { 
-        return this.api.getProducts()
-            .then((products) => {
-                this.products = products;
-                return products
-            });
-    }*/
+    protected notifyChanged(changed: AppStateChanges) {
+        this.settings.onChange(changed);        
+    }
 
-    loadProductCatalog(): Promise<IProductCatalog> {
+    loadProductCatalog(): Promise<void> {
         return this.api.getProducts()
             .then((products) => {
                 this.products = products;
-                //message to events
-                return products;
+                this.notifyChanged(AppStateChanges.catalog);
             });
     }
 
     placeOrder(order: IOrder): Promise<IOrderResult> {
         return this.api.createOrder(order);
+    }
+
+    selectProduct(id: string | null): void {
+        if (!id || this.products.items.has(id)) {
+            this.selectedProduct = id ? this.products.items.get(id) : null;
+            //this.notifyChanged(AppStateChanges.product)
+        } else {
+            throw new Error (`Invalid product id: ${id}`);
+        }
     }
 
     addToBasket(id: string): void {
@@ -110,6 +115,9 @@ export class AppState implements IAppState {
     }
 
     openModal(modal: AppStateModals): void {
-        
+        if (this.openedModal !== modal) {
+            this.openedModal = modal;
+            this.notifyChanged(AppStateChanges.modal);
+        }
     }
 }

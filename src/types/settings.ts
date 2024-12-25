@@ -1,3 +1,4 @@
+import { ElementCreator } from "./html";
 
 export interface Settings {
     //interface settings
@@ -7,12 +8,12 @@ export interface Settings {
         counter: string;
         basket: string;
         lockedClass: string;
-    }
+    };
 
     gallerySelector: string;
     gallerySettings: {
         itemClass: string;
-    }
+    };
 
     cardTemplate: string;
     cardSettings: {
@@ -20,7 +21,7 @@ export interface Settings {
         title: string;
         image: string;
         price: string;
-    }
+    };
 
     productTemplate: string;
     productSettings: {
@@ -30,24 +31,24 @@ export interface Settings {
         desciption: string;
         price: string;
         compactClass: string;
-    }
+    };
 
     basketTempalte: string;
     basketSettings: {
         itemClass: string;
-    }
+    };
 
     orderTemplate: string;
     orderSettings: {
         payment: string;
         address: string;
-    }
+    };
 
     contactsTemplate: string;
     contactsSettings: {
         email: string;
         phone: string;
-    }
+    };
 
     successTemplate: string;
 
@@ -56,12 +57,13 @@ export interface Settings {
     modalSettings: {
         close: string;
         content: string;
+        message: string,
         activeClass: string;
         errorMessageClass: string;
-    }
+    };
 
     //model settings 
     appState: {
         formatCurrency: (value: number) => string;
-    }
+    };
 }

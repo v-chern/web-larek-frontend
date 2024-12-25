@@ -5,32 +5,48 @@ import { AppState } from './components/model/AppState';
 
 import { TPaymentAddress, TContacts, TPaymentType } from './types/components/model/LarekApi';
 
-import { IAppStateSettings } from './types/components/model/AppState';
+import { AppStateChanges, AppStateModals, IAppStateSettings } from './types/components/model/AppState';
 
 import { EventEmitter } from './components/base/events';
-import { MainScreen } from './components/view/screen/Main';
+import { MainScreen } from './components/view/screen/MainScreen';
 import { AppStateEmitter } from './components/model/AppStateEmitter';
 import { SETTINGS, API_URL, CDN_URL } from './utils/constants';
 import { MainController } from './components/controller/MainController';
+import { cloneTemplate, ensureElement } from './utils/utils';
 
-const api = new LarekApi(API_URL);
+const api = new LarekApi(CDN_URL, API_URL);
 const app = new AppStateEmitter(api, SETTINGS.appState, AppState);
 const main = new MainScreen(new MainController(app.model));
-//TODO: Image address нужно формировать из CDN переменной
+
+/*// Чтобы мониторить все события, для отладки
+events.onAll(({ eventName, data }) => {
+    console.log(eventName, data);
+})
+    */
+
+app.on(AppStateChanges.catalog, () => {
+    console.log(`event: Catalog`);
+    main.items = Array.from(app.model.products.items.values()).map((item) => {
+        return {
+            id: item.id,
+            category: item.category,
+            title: item.title,
+            image: item.image,
+            price: SETTINGS.appState.formatCurrency(item.price)
+        }})
+})
+
+app.on(AppStateChanges.modal, () => {
+    console.log('event: Open Modal');
+    console.log(app.model.openedModal);
+    app.model.openedModal = AppStateModals.none;
+    //console.log(app.model.selectedProduct);
+}) 
+
 app.model
     .loadProductCatalog()
-    .then(() => {
-        //TODO: проверить константы. Почему то ошибка в функции рендер el.render в лист вью
-        main.items = Array.from(app.model.products.items.values()).map((item) => {
-            console.log(CDN_URL + item.image);
-            return {
-                id: item.id,
-                category: item.category,
-                title: item.title,
-                image: item.image,
-                price: '12 туг'
-            }})
-    })
+    .then(() => {})
+    .catch((err: string) => console.log(`Error: ${err}`));
 
 
 

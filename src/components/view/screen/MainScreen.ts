@@ -4,8 +4,7 @@ import { cloneTemplate, ensureElement } from "../../../utils/utils";
 import { SETTINGS } from "../../../utils/constants";
 import { 
     MainData, 
-    MainSettings, 
-    ProdutcItem
+    MainSettings
 } from "../../../types/components/view/screen/Main";
 import { ListView } from "../common/ListView";
 import { CardData } from "../../../types/components/view/partial/Card";
@@ -22,6 +21,7 @@ export class MainScreen extends Screen<MainData, MainSettings> {
             ...SETTINGS.pageSettings,
             onClick: this.settings.onOpenBasket,
         });
+
         this.gallery = new ListView<CardData>(
             ensureElement(SETTINGS.gallerySelector), {
                 ...SETTINGS.gallerySettings,
@@ -34,8 +34,8 @@ export class MainScreen extends Screen<MainData, MainSettings> {
         this.element = this.page.element;
     }
 
-    protected onSelectCardHandler({item}: IClickableEvent<ProdutcItem>) {
-        this.settings.onOpenCard(item.id);
+    protected onSelectCardHandler({item}: IClickableEvent<string>) {
+        this.settings.onOpenCard(item);
     }
 
     set counter(value: number) {

@@ -31,6 +31,7 @@ export enum AppStateModals {
 }
 
 export enum AppStateChanges {
+    catalog = 'change:catalog',
     modal = 'change:modal',
     basket = 'change:basket',
     order = 'change:order'
@@ -52,12 +53,11 @@ export interface IAppState {
     isValidationError: boolean;
     
     //API actions
-    //loadProducts(): Promise<IProductCatalog>;
-    loadProductCatalog(): Promise<IProductCatalog>;
+    loadProductCatalog(): Promise<void>;
     placeOrder(order: IOrder): Promise<IOrderResult>;
 
     //Model operations 
-    //setProductCatalog(products: IProductCatalog): void;
+    selectProduct(id: string | null): void;
     addToBasket(id: string): void;
     removeFromBasket(id: string): void;
     getBasketTotal(): number;

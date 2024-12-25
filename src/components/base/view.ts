@@ -114,7 +114,7 @@ export abstract class View<T, S extends object> implements IView<T, S> {
         } else if (isChildElement(value)) {
             setElementChildren(el, value);
         } else if (isPlainObject(value) ){
-            setElementProps<T>(el as T, value as ElementProps<T>);
+            setElementProps<T>(el, value as ElementProps<T>);
         } else {
             throw new Error(`Unknown value type ${value}`);
         }

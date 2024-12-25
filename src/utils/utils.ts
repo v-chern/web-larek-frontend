@@ -88,15 +88,16 @@ export function setElementData<T extends Record<string, unknown> | object>(el: H
  */
 
 export function setElementProps<T extends HTMLElement>(
-    element: T,
+    element: HTMLElement,
     props: ElementProps<T>
 ) { 
     for (const key in props) {
-        const val = props[key];
-        if (isPlainObject(val) && key === 'dataset') {
-            setElementData(element, val);
+        const value = props[key];
+        if (isPlainObject(value) && key === 'dataset') {
+            setElementData(element, value);
         } else {
-            //element[key] = isBoolean(val) ? val : String(val);
+            // @ts-expect-error
+            element[key] = isBoolean(value) ? value : String(value);
         }
     } 
 }

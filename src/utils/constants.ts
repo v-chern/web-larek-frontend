@@ -60,12 +60,19 @@ export const SETTINGS: Settings = {
     modalSettings: {
         close: '.modal__close',
         content: '.modal__content',
+        message: '.modal__message',
         activeClass: '.modal_active',
         errorMessageClass: '.modal__message_error',
     },
 
     //model settings 
     appState: {
-        formatCurrency: (value: number) => `${value} туг.`,
+        formatCurrency (value: number) : string {
+            let retVal = 'Бесценно';
+            if(value) {
+                retVal = `${value.toLocaleString('ru-RU')} синапсов`
+            }
+            return retVal;
+        }
     }
 }
