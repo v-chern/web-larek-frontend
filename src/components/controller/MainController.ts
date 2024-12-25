@@ -6,7 +6,7 @@ export class MainController extends Controller<IAppState> {
         this.model.openModal(AppStateModals.basket);
     }
 
-    onOpenCard = (id: string) => {
+    onOpenCard(id: string) {
         this.model.selectProduct(id);
         this.model.openModal(AppStateModals.product);
     }

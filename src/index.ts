@@ -39,8 +39,8 @@ app.on(AppStateChanges.catalog, () => {
 app.on(AppStateChanges.modal, () => {
     console.log('event: Open Modal');
     console.log(app.model.openedModal);
+    console.log(app.model.selectedProduct);
     app.model.openedModal = AppStateModals.none;
-    //console.log(app.model.selectedProduct);
 }) 
 
 app.model
