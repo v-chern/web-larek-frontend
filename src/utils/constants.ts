@@ -36,9 +36,16 @@ export const SETTINGS: Settings = {
         compactClass: '.card_compact',
     },
 
-    basketTempalte: '#basket',
+    basketTemplate: '#basket',
     basketSettings: {
         itemClass: '.basket__item',
+        itemIndexClass: '.basket__item-index',
+    },
+
+    basketCardTemplate: '#card-basket',
+    basketCardSettings: {
+        title: '.card__title',
+        price: '.card__price',
     },
 
     orderTemplate: '#order',
@@ -56,7 +63,7 @@ export const SETTINGS: Settings = {
     successTemplate: '#success',
 
     //modals settings
-    modalTempalte: '.modal',
+    modalTemplate: '.modal',
     modalSettings: {
         close: '.modal__close',
         content: '.modal__content',

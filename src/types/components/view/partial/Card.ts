@@ -9,9 +9,9 @@ export interface CardData {
 }
 
 export interface CardSettings extends IClickable<string> {
-    category: string;
+    category?: string;
+    image?: string;
     title: string;
-    image: string;
     price: string;
 }
 

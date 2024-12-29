@@ -33,10 +33,17 @@ export interface Settings {
         compactClass: string;
     };
 
-    basketTempalte: string;
+    basketTemplate: string;
     basketSettings: {
-        itemClass: string;
-    };
+        itemClass: string,
+        itemIndexClass: string,
+    },
+
+    basketCardTemplate: string,
+    basketCardSettings: {
+        title: string,
+        price: string,
+    },
 
     orderTemplate: string;
     orderSettings: {
@@ -53,7 +60,7 @@ export interface Settings {
     successTemplate: string;
 
     //modals settings
-    modalTempalte: string;
+    modalTemplate: string;
     modalSettings: {
         close: string;
         content: string;
