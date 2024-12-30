@@ -4,25 +4,32 @@ import { LarekApi } from './components/model/LarekAPI';
 import { AppState } from './components/model/AppState';
 
 import { TPaymentAddress, TContacts, TPaymentType } from './types/components/model/LarekApi';
-
+import { ensureElement } from './utils/utils';
 import { AppStateChanges, AppStateModals, IAppStateSettings } from './types/components/model/AppState';
+import { ModalChange } from './types/components/model/AppStateEmitter';
 
-import { EventEmitter } from './components/base/events';
+
 import { MainScreen } from './components/view/screen/MainScreen';
 import { AppStateEmitter } from './components/model/AppStateEmitter';
 import { SETTINGS, API_URL, CDN_URL } from './utils/constants';
 import { MainController } from './components/controller/MainController';
-import { cloneTemplate, ensureElement } from './utils/utils';
+import { BasketScreen } from './components/view/screen/BasketScreen';
+import { BasketController } from './components/controller/BasketController';
 
 const api = new LarekApi(CDN_URL, API_URL);
 const app = new AppStateEmitter(api, SETTINGS.appState, AppState);
 const main = new MainScreen(new MainController(app.model));
+//console.log(SETTINGS.basketSettings);
 
-/*// Чтобы мониторить все события, для отладки
-events.onAll(({ eventName, data }) => {
-    console.log(eventName, data);
-})
-    */
+const modal = {
+    [AppStateModals.product]: new BasketScreen(new BasketController(app.model)),
+    [AppStateModals.basket]: new BasketScreen(new BasketController(app.model)),
+    [AppStateModals.address]: new BasketScreen(new BasketController(app.model)),
+    [AppStateModals.contacts]: new BasketScreen(new BasketController(app.model)),
+    [AppStateModals.success]: new BasketScreen(new BasketController(app.model))
+};
+
+console.log(modal);
 
 app.on(AppStateChanges.catalog, () => {
     console.log(`event: Catalog`);
@@ -36,12 +43,46 @@ app.on(AppStateChanges.catalog, () => {
         }})
 })
 
-app.on(AppStateChanges.modal, () => {
-    console.log('event: Open Modal');
-    console.log(app.model.openedModal);
-    console.log(app.model.selectedProduct);
-    app.model.openedModal = AppStateModals.none;
-}) 
+/*
+app.on(AppStateModals.basket, () => {
+	console.log('modals basket');
+	modal[AppStateModals.basket].render({
+		header: {
+			title: SETTINGS.basketModal.headerTitle,
+			description: app.model.basket.size
+				? app.model.formatMovieDescription(app.model.getBasketMovie())
+				: '',
+		},
+		tickets: Array.from(app.model.basket.values()).map((ticket) => {
+			return app.model.formatTicketDescription(ticket);
+		}),
+		total: app.model.formatCurrency(app.model.basketTotal),
+		isDisabled: app.model.basket.size === 0,
+		isActive: true,
+	});
+});
+*/
+
+app.on(AppStateChanges.modal, ({ previous, current }: ModalChange)  => {
+    console.log('event modal');
+    main.page.isLocked = current !== AppStateModals.none;
+	/*if (previous !== AppStateModals.none) {
+		modal[previous].render({ isActive: false });
+	}*/
+});
+
+app.on(AppStateModals.basket, () => {
+    console.log('event basket');
+    modal[AppStateModals.basket].modal.isActive = true;
+    
+    /*modal[AppStateModals.basket].items = [{
+        id: 'string',
+        category: 'string',
+        title: 'string',
+        image: 'string',
+        price: 'string' 
+    }]*/
+ });
 
 app.model
     .loadProductCatalog()

@@ -60,7 +60,7 @@ export interface Settings {
     successTemplate: string;
 
     //modals settings
-    modalTemplate: string;
+    modalContainer: string;
     modalSettings: {
         close: string;
         content: string;

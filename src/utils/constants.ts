@@ -38,7 +38,7 @@ export const SETTINGS: Settings = {
 
     basketTemplate: '#basket',
     basketSettings: {
-        itemClass: '.basket__item',
+        itemClass: 'basket__item',
         itemIndexClass: '.basket__item-index',
     },
 
@@ -63,12 +63,12 @@ export const SETTINGS: Settings = {
     successTemplate: '#success',
 
     //modals settings
-    modalTemplate: '.modal',
+    modalContainer: '#modal-container',
     modalSettings: {
         close: '.modal__close',
         content: '.modal__content',
         message: '.modal__message',
-        activeClass: '.modal_active',
+        activeClass: 'modal_active',
         errorMessageClass: '.modal__message_error',
     },
 

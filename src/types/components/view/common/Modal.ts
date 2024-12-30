@@ -13,8 +13,8 @@ export interface ModalSettings<C> {
     close: string;
     content: string;
     message: string;
-    contentView: IView<C>;
-    actions: HTMLElement[];
+    contentView?: IView<C>;
+    actions?: HTMLElement[];
     activeClass: string;
     errorMessageClass: string;
     onOpen?: () => void;
