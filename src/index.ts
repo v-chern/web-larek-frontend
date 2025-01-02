@@ -3,8 +3,6 @@ import './scss/styles.scss';
 import { LarekApi } from './components/model/LarekAPI';
 import { AppState } from './components/model/AppState';
 
-import { TPaymentAddress, TContacts, TPaymentType } from './types/components/model/LarekApi';
-import { ensureElement } from './utils/utils';
 import { AppStateChanges, AppStateModals, IAppStateSettings } from './types/components/model/AppState';
 import { ModalChange } from './types/components/model/AppStateEmitter';
 
@@ -13,35 +11,89 @@ import { MainScreen } from './components/view/screen/MainScreen';
 import { AppStateEmitter } from './components/model/AppStateEmitter';
 import { SETTINGS, API_URL, CDN_URL } from './utils/constants';
 import { MainController } from './components/controller/MainController';
-import { BasketScreen } from './components/view/screen/BasketScreen';
-import { BasketController } from './components/controller/BasketController';
+import { EventEmitter } from './components/base/events';
+import { cloneTemplate, ensureElement } from './utils/utils';
+import { Page } from './components/view/common/Page';
+import { Modal } from './components/view/common/Modal';
+import { Basket } from './components/view/common/Basket';
+import { Card } from './components/view/common/Card';
+import { CardData } from './types/components/view/partial/Card';
 
 const api = new LarekApi(CDN_URL, API_URL);
+const events = new EventEmitter();
+events.onAll(({ eventName, data }) => {
+    console.log('events:', eventName, data);
+})
+
+const cardCatalogTemplate = ensureElement<HTMLTemplateElement>('#card-catalog');
+const cardPreviewTemplate = ensureElement<HTMLTemplateElement>('#card-preview');
+const basketTemplate = ensureElement<HTMLTemplateElement>('#basket');
+const cardBasketTemplate = ensureElement<HTMLTemplateElement>('#card-basket');
+const orderTemplate = ensureElement<HTMLTemplateElement>('#order');
+const contactsTemplate = ensureElement<HTMLTemplateElement>('#contacts');
+const successTemplate = ensureElement<HTMLTemplateElement>('#success');
+
 const app = new AppStateEmitter(api, SETTINGS.appState, AppState);
-const main = new MainScreen(new MainController(app.model));
-//console.log(SETTINGS.basketSettings);
 
-const modal = {
-    [AppStateModals.product]: new BasketScreen(new BasketController(app.model)),
-    [AppStateModals.basket]: new BasketScreen(new BasketController(app.model)),
-    [AppStateModals.address]: new BasketScreen(new BasketController(app.model)),
-    [AppStateModals.contacts]: new BasketScreen(new BasketController(app.model)),
-    [AppStateModals.success]: new BasketScreen(new BasketController(app.model))
-};
+const page = new Page(document.body, {
+    onClick: () => {
+        app.emit(AppStateModals.basket);
+    }
+});
 
-console.log(modal);
+const modal = new Modal(ensureElement<HTMLElement>('#modal-container'), events);
+
+const basket = new Basket(cloneTemplate(basketTemplate), events);
+
+app.onAll(({ eventName, data }) => {
+    console.log('app:', eventName, data);
+})
 
 app.on(AppStateChanges.catalog, () => {
-    console.log(`event: Catalog`);
-    main.items = Array.from(app.model.products.items.values()).map((item) => {
-        return {
+    console.log(`app: Catalog`);
+    page.catalog = Array.from(app.model.products.items.values()).map((item) => {
+        const card = new Card('card', cloneTemplate(cardCatalogTemplate), {
+            onClick: () => {
+                app.model.openModal(AppStateModals.product);
+                app.emit(AppStateModals.product, item);
+            }
+        });
+        return card.render({
             id: item.id,
             category: item.category,
             title: item.title,
             image: item.image,
             price: SETTINGS.appState.formatCurrency(item.price)
-        }})
+        });
+    })
 })
+
+app.on(AppStateModals.product, (item: CardData) => {
+    console.log('app: Product', item.id);
+    const card = new Card('card', cloneTemplate(cardPreviewTemplate), {
+        onClick: () => app.emit(AppStateChanges.addProduct, item)
+    });
+    modal.render({
+        content: card.render({
+            id: item.id,
+            title: item.title,
+            category: item.category,
+            description: item.description,
+            image: item.image,
+            price: item.price
+        })
+    });
+ });
+
+app.on(AppStateChanges.addProduct, (item: CardData) => {
+    console.log('app: Add to basket', item.id);
+    app.model.addToBasket(item.id);
+});
+
+app.on(AppStateChanges.removeProduct, (item: CardData) => {
+    console.log('app: Remove from basket', item.id);
+    app.model.removeFromBasket(item.id);
+});
 
 /*
 app.on(AppStateModals.basket, () => {
@@ -63,17 +115,18 @@ app.on(AppStateModals.basket, () => {
 });
 */
 
+
 app.on(AppStateChanges.modal, ({ previous, current }: ModalChange)  => {
-    console.log('event modal');
-    main.page.isLocked = current !== AppStateModals.none;
+    console.log('app: Modal');
+    page.locked = current !== AppStateModals.none;
 	/*if (previous !== AppStateModals.none) {
 		modal[previous].render({ isActive: false });
 	}*/
 });
 
 app.on(AppStateModals.basket, () => {
-    console.log('event basket');
-    modal[AppStateModals.basket].modal.isActive = true;
+    console.log('app: Basket');
+    //modal[AppStateModals.basket].modal.isActive = true;
     
     /*modal[AppStateModals.basket].items = [{
         id: 'string',

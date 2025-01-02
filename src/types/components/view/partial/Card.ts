@@ -6,6 +6,7 @@ export interface CardData {
     title: string;
     image: string;
     price: string;
+    description?: string;
 }
 
 export interface CardSettings extends IClickable<string> {

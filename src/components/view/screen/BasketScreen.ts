@@ -14,7 +14,7 @@ import { CardView } from "../partial/CardView";
 import { ModalData } from "../../../types/components/view/common/Modal";
 
 
-/*
+
 export class BasketScreen extends Screen<BasketData, BasketSettings> {
     protected declare _products: ListView<CardData>;
     
@@ -23,7 +23,6 @@ export class BasketScreen extends Screen<BasketData, BasketSettings> {
     protected init() {
         this.modal = new ModalView(ensureElement(SETTINGS.modalContainer), {
             ...SETTINGS.modalSettings,
-
         })
         this.modal.content = cloneTemplate(SETTINGS.basketTemplate);
         console.log(this.modal);
@@ -35,4 +34,3 @@ export class BasketScreen extends Screen<BasketData, BasketSettings> {
         this._products.items = value;
     }
 }
-*/
