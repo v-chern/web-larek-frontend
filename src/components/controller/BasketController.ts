@@ -11,6 +11,6 @@ export class BasketController extends Controller<IAppState> {
     }
 
     onNext = () => {
-        this.model.openModal(AppStateModals.address);
+        this.model.openModal(AppStateModals.order);
     }
 }

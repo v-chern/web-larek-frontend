@@ -35,7 +35,7 @@ export interface IProductCatalog {
 export interface IOrder {
     items: string[];
     total: number;
-    payment: TPaymentType;
+    payment: TPaymentType | null;
     address: string;
     email: string;
     phone: string;
@@ -43,7 +43,7 @@ export interface IOrder {
 
 export interface IOrderResult{
     id: string;
-    totalSum: number;
+    total: number;
 }
 
 export interface ILarekAPI {

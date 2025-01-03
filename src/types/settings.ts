@@ -47,10 +47,11 @@ export interface Settings {
 
     orderTemplate: string;
     orderSettings: {
-        payment: string;
+        paymentCard: string;
+        paymentCash: string;
+        paymentActive: string;
         address: string;
     };
-
     contactsTemplate: string;
     contactsSettings: {
         email: string;
@@ -58,6 +59,20 @@ export interface Settings {
     };
 
     successTemplate: string;
+    successSettings: {
+        descripion: string;
+        closeButton: string;
+        formatMessage: (value: number) => string;
+    },
+
+    orderErrors: {
+        paymentError: string;
+        addressError: string;
+    };
+    contactsErrors: {
+        emailError: string;
+        phoneError: string;
+    };
 
     //modals settings
     modalContainer: string;

@@ -6,13 +6,12 @@ import {
     IOrder,
     IOrderResult,
     ILarekAPI,
-    TPaymentType
  } from "../../types/components/model/LarekApi";
 
 import { 
-    AppStateModals, 
     IAppStateSettings, 
     IAppState, 
+    AppStateModals,
     AppStateChanges
 } from "../../types/components/model/AppState";
 
@@ -22,6 +21,7 @@ export class AppState implements IAppState {
 
     selectedProduct: IProduct | null = null;
     userOrder: IOrder | null = null;
+    orderResult: IOrderResult | null = null;
 
     openedModal: AppStateModals = AppStateModals.none;
     isOrderReady: boolean = false;
@@ -32,14 +32,13 @@ export class AppState implements IAppState {
     private settings: IAppStateSettings;
     
     constructor(api: ILarekAPI, settings: IAppStateSettings) {
-    //constructor(api: ILarekAPI) {
         this.api = api;
         this.settings = settings;
 
         this.userOrder = {
             items: [],
             total: 0,
-            payment: TPaymentType.cash,
+            payment: null,
             address: '',
             email: '',
             phone: ''
@@ -58,14 +57,18 @@ export class AppState implements IAppState {
             });
     }
 
-    placeOrder(order: IOrder): Promise<IOrderResult> {
-        return this.api.createOrder(order);
+    placeOrder(): Promise<void> {
+        return this.api.createOrder(this.userOrder)
+            .then((res) => {
+                this.orderResult = res;
+                this.notifyChanged(AppStateChanges.success);
+            });
     }
 
     selectProduct(id: string | null): void {
         if (!id || this.products.items.has(id)) {
             this.selectedProduct = id ? this.products.items.get(id) : null;
-            //this.notifyChanged(AppStateChanges.product)
+            this.notifyChanged(AppStateChanges.product)
         } else {
             throw new Error (`Invalid product id: ${id}`);
         }
@@ -114,6 +117,19 @@ export class AppState implements IAppState {
 
     getOrder(): IOrder {
         return this.userOrder;
+    }
+
+    clearOrder() {
+        this.userOrder = {
+            items: [],
+            total: 0,
+            payment: null,
+            address: '',
+            email: '',
+            phone: ''
+        }
+        this.orderResult = null;
+        this.openModal(AppStateModals.none);
     }
 
     openModal(modal: AppStateModals): void {

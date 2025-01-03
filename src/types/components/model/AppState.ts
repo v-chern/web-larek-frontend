@@ -25,7 +25,7 @@ export enum AppStateModals {
     none = 'modal:none',
     product = 'modal:product',
     basket = 'modal:basket',
-    address = 'modal:order',
+    order = 'modal:order',
     contacts = 'modal:contacts',
     success = 'modal:success'
 }
@@ -33,10 +33,14 @@ export enum AppStateModals {
 export enum AppStateChanges {
     catalog = 'change:catalog',
     modal = 'change:modal',
+    product = 'change:product',
     addProduct = 'change:add',
     removeProduct = 'change:remove',
     basket = 'change:basket',
-    order = 'change:order'
+    order = 'change:order',
+    contacts = 'change:contacts',
+    submit = 'change:submit',
+    success = 'change:success'
 }
 
 //Application data model
@@ -47,6 +51,7 @@ export interface IAppState {
     // User actioned data
     selectedProduct: IProduct | null;
     userOrder: IOrder | null;
+    orderResult: IOrderResult | null;
 
     // UI states
     openedModal: AppStateModals;
@@ -56,7 +61,7 @@ export interface IAppState {
     
     //API actions
     loadProductCatalog(): Promise<void>;
-    placeOrder(order: IOrder): Promise<IOrderResult>;
+    placeOrder(): Promise<void>;
 
     //Model operations 
     selectProduct(id: string | null): void;
@@ -67,6 +72,7 @@ export interface IAppState {
     fillAddress(address: TPaymentAddress): void;
     fillContacts(contats: TContacts): void;
     getOrder(): IOrder;
+    clearOrder(): void;
 
     //UI operations
     openModal(modal: AppStateModals): void;

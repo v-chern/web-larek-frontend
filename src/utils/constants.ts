@@ -1,4 +1,5 @@
 import { Settings } from "../types/settings";
+import { formatNumber } from "./utils";
 
 export const API_URL = `${process.env.API_ORIGIN}/api/weblarek`;
 export const CDN_URL = `${process.env.API_ORIGIN}/content/weblarek`;
@@ -50,7 +51,9 @@ export const SETTINGS: Settings = {
 
     orderTemplate: '#order',
     orderSettings: {
-        payment: '.order__buttons',
+        paymentCard: 'button[name=card]',
+        paymentCash: 'button[name=cash]',
+        paymentActive: 'button_alt-active',
         address: 'input[name=address]',
     },
 
@@ -61,6 +64,13 @@ export const SETTINGS: Settings = {
     },
 
     successTemplate: '#success',
+    successSettings: {
+        descripion: '.order-success__description',
+        closeButton: '.order-success__close',
+        formatMessage(value: number): string {
+            return `Списано ${formatNumber(value)} синапсов`
+        }
+    },
 
     //modals settings
     modalContainer: '#modal-container',
@@ -72,12 +82,22 @@ export const SETTINGS: Settings = {
         errorMessageClass: '.modal__message_error',
     },
 
+    //form validation errors
+    orderErrors: {
+        paymentError: 'Выберите способ оплаты',
+        addressError: 'Укажите адрес доставки'
+    },
+    contactsErrors: {
+        emailError: 'Укажите корректный e-mail',
+        phoneError: 'Укадите корректный номер телефона'
+    },
+
     //model settings 
     appState: {
         formatCurrency (value: number) : string {
             let retVal = 'Бесценно';
             if(value) {
-                retVal = `${value.toLocaleString('ru-RU')} синапсов`
+                retVal = `${formatNumber(value)} синапсов`
             }
             return retVal;
         }

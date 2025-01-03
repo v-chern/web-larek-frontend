@@ -1,8 +1,10 @@
-export interface SuccessData {
-    text: string;
-    isActive: boolean;
+export interface ISuccessData {
+    message: string;
 }
 
-export interface SuccessSettings {
+export interface ISuccessSettings {
+    descripion: string;
+    closeButton: string;
+    formatMessage: (value: number) => string;
     onClose: () => void;
 }
