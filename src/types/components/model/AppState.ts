@@ -35,6 +35,7 @@ export enum AppStateChanges {
     modal = 'change:modal',
     addProduct = 'change:add',
     removeProduct = 'change:remove',
+    basket = 'change:basket',
     order = 'change:order'
 }
 

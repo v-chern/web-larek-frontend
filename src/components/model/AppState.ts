@@ -76,6 +76,7 @@ export class AppState implements IAppState {
         if (productDetails) {
             this.userOrder.items.push(id);
             this.userOrder.total += productDetails.price;
+            this.notifyChanged(AppStateChanges.basket);
         }
     }
 
@@ -85,11 +86,12 @@ export class AppState implements IAppState {
         if (itemIdx != -1) {
             this.userOrder.items.splice(itemIdx, 1);
             this.userOrder.total -= productDetails.price;
+            this.notifyChanged(AppStateChanges.basket);
         }
     }
 
     getBasketTotal(): number {
-        return this.userOrder.items.length;
+        return this.userOrder.total;
     }
 
     getBasketItems(): IProduct[] {

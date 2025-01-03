@@ -18,12 +18,14 @@ import { Modal } from './components/view/common/Modal';
 import { Basket } from './components/view/common/Basket';
 import { Card } from './components/view/common/Card';
 import { CardData } from './types/components/view/partial/Card';
+import { IProduct } from './types/components/model/LarekApi';
 
 const api = new LarekApi(CDN_URL, API_URL);
 const events = new EventEmitter();
 events.onAll(({ eventName, data }) => {
     console.log('events:', eventName, data);
-})
+});
+
 
 const cardCatalogTemplate = ensureElement<HTMLTemplateElement>('#card-catalog');
 const cardPreviewTemplate = ensureElement<HTMLTemplateElement>('#card-preview');
@@ -37,17 +39,17 @@ const app = new AppStateEmitter(api, SETTINGS.appState, AppState);
 
 const page = new Page(document.body, {
     onClick: () => {
-        app.emit(AppStateModals.basket);
+        app.model.openModal(AppStateModals.basket);
     }
 });
 
-const modal = new Modal(ensureElement<HTMLElement>('#modal-container'), events);
+const modal = new Modal(ensureElement<HTMLElement>('#modal-container'), {
+    onClose: () => {
+        app.model.openModal(AppStateModals.none);
+    }
+});
 
 const basket = new Basket(cloneTemplate(basketTemplate), events);
-
-app.onAll(({ eventName, data }) => {
-    console.log('app:', eventName, data);
-})
 
 app.on(AppStateChanges.catalog, () => {
     console.log(`app: Catalog`);
@@ -65,77 +67,68 @@ app.on(AppStateChanges.catalog, () => {
             image: item.image,
             price: SETTINGS.appState.formatCurrency(item.price)
         });
-    })
-})
+    });
+});
 
-app.on(AppStateModals.product, (item: CardData) => {
-    console.log('app: Product', item.id);
+app.on(AppStateModals.product, (item: IProduct) => {
     const card = new Card('card', cloneTemplate(cardPreviewTemplate), {
         onClick: () => app.emit(AppStateChanges.addProduct, item)
     });
     modal.render({
         content: card.render({
-            id: item.id,
             title: item.title,
             category: item.category,
             description: item.description,
             image: item.image,
-            price: item.price
+            price: SETTINGS.appState.formatCurrency(item.price)
         })
     });
  });
 
+app.on(AppStateModals.basket, () => {
+    console.log('app: Basket');
+
+    basket.items = app.model.getBasketItems().map((item, idx) => {
+        const card = new Card('card', cloneTemplate(cardBasketTemplate), {
+            onClick: () => {
+                app.emit(AppStateChanges.removeProduct, item);
+            }
+        });
+        return card.render({
+            id: item.id,
+            basketIndex: String(idx + 1),
+            title: item.title,
+            price: SETTINGS.appState.formatCurrency(item.price)
+        });
+    });
+    basket.total = SETTINGS.appState.formatCurrency(app.model.getBasketTotal());
+
+    modal.render({ content: basket.render() });
+ });
+
 app.on(AppStateChanges.addProduct, (item: CardData) => {
-    console.log('app: Add to basket', item.id);
+    console.log('app change: Add to basket', item.id);
     app.model.addToBasket(item.id);
 });
 
 app.on(AppStateChanges.removeProduct, (item: CardData) => {
-    console.log('app: Remove from basket', item.id);
+    console.log('app change: Remove from basket', item.id);
     app.model.removeFromBasket(item.id);
 });
 
-/*
-app.on(AppStateModals.basket, () => {
-	console.log('modals basket');
-	modal[AppStateModals.basket].render({
-		header: {
-			title: SETTINGS.basketModal.headerTitle,
-			description: app.model.basket.size
-				? app.model.formatMovieDescription(app.model.getBasketMovie())
-				: '',
-		},
-		tickets: Array.from(app.model.basket.values()).map((ticket) => {
-			return app.model.formatTicketDescription(ticket);
-		}),
-		total: app.model.formatCurrency(app.model.basketTotal),
-		isDisabled: app.model.basket.size === 0,
-		isActive: true,
-	});
+app.on(AppStateChanges.basket, () => {
+    console.log('app change: Basket change');
+    page.counter = app.model.getBasketItems().length;
+    console.log(app.model.openedModal);
+    if (app.model.openedModal === AppStateModals.basket) {
+        app.emit(AppStateModals.basket);
+    }
 });
-*/
-
 
 app.on(AppStateChanges.modal, ({ previous, current }: ModalChange)  => {
-    console.log('app: Modal');
+    console.log('app change: Modal');
     page.locked = current !== AppStateModals.none;
-	/*if (previous !== AppStateModals.none) {
-		modal[previous].render({ isActive: false });
-	}*/
 });
-
-app.on(AppStateModals.basket, () => {
-    console.log('app: Basket');
-    //modal[AppStateModals.basket].modal.isActive = true;
-    
-    /*modal[AppStateModals.basket].items = [{
-        id: 'string',
-        category: 'string',
-        title: 'string',
-        image: 'string',
-        price: 'string' 
-    }]*/
- });
 
 app.model
     .loadProductCatalog()

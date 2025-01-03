@@ -6,7 +6,6 @@ interface IPageActions {
     onClick: (event: MouseEvent) => void;
 }
 
-
 interface IPage {
     counter: number;
     gallery: HTMLElement[];
