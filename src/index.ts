@@ -1,32 +1,28 @@
 import './scss/styles.scss';
 
-import { LarekApi } from './components/model/LarekAPI';
-import { AppState } from './components/model/AppState';
-
+import { TContacts, TPaymentAddress, TPaymentType } from './types/components/model/LarekApi';
 import { AppStateChanges, AppStateModals, IAppStateSettings } from './types/components/model/AppState';
 import { ModalChange } from './types/components/model/AppStateEmitter';
+import { CardData } from './types/components/view/partial/Card';
 
-
-import { AppStateEmitter } from './components/model/AppStateEmitter';
 import { SETTINGS, API_URL, CDN_URL } from './utils/constants';
-import { EventEmitter } from './components/base/events';
+
+import { LarekApi } from './components/model/LarekAPI';
+import { AppState } from './components/model/AppState';
+import { AppStateEmitter } from './components/model/AppStateEmitter';
+
 import { cloneTemplate, ensureElement } from './utils/utils';
+
 import { Page } from './components/view/partial/Page';
 import { Modal } from './components/view/common/Modal';
-import { Basket } from './components/view/partial/Basket';
-import { Card } from './components/view/common/Card';
-import { CardData } from './types/components/view/partial/Card';
-import { TContacts, TPaymentAddress, TPaymentType } from './types/components/model/LarekApi';
-import { Order } from './components/view/partial/Order';
-import { Contacts } from './components/view/partial/Contacts';
-import { Success } from './components/view/partial/Success';
+import { Basket } from './components/view/screen/Basket';
+import { Card } from './components/view/partial/Card';
+import { Order } from './components/view/screen/Order';
+import { Contacts } from './components/view/screen/Contacts';
+import { Success } from './components/view/screen/Success';
 
 const api = new LarekApi(CDN_URL, API_URL);
-const events = new EventEmitter();
-events.onAll(({ eventName, data }) => {
-    console.log('events:', eventName, data);
-});
-
+const app = new AppStateEmitter(api, SETTINGS.appState, AppState);
 
 const cardCatalogTemplate = ensureElement<HTMLTemplateElement>('#card-catalog');
 const cardPreviewTemplate = ensureElement<HTMLTemplateElement>('#card-preview');
@@ -36,8 +32,7 @@ const orderTemplate = ensureElement<HTMLTemplateElement>('#order');
 const contactsTemplate = ensureElement<HTMLTemplateElement>('#contacts');
 const successTemplate = ensureElement<HTMLTemplateElement>('#success');
 
-const app = new AppStateEmitter(api, SETTINGS.appState, AppState);
-
+//modals
 const page = new Page(document.body, {
     onClick: () => {
         app.model.openModal(AppStateModals.basket);
@@ -105,6 +100,7 @@ const success = new Success(cloneTemplate(successTemplate), {
     }
 })
 
+//logic
 app.on(AppStateModals.product, () => {
     const item = app.model.selectedProduct;
     const card = new Card('card', cloneTemplate(cardPreviewTemplate), {
@@ -251,37 +247,3 @@ app.model
     .loadProductCatalog()
     .then(() => {})
     .catch((err: string) => console.log(`Error: ${err}`));
-
-/*const appModel : AppState = new AppState(api);
-
-async function modelTest() {
-    console.log('Test: Products testing');
-    await appModel.loadProductCatalog();
-    console.log(appModel.products);
-
-    console.log('Test: Adding items to basket');
-    appModel.addToBasket("f3867296-45c7-4603-bd34-29cea3a061d5");
-    console.log('Basket Items: ', appModel.getBasketItems());
-    console.log('Basket Count: ', appModel.getBasketTotal());
-    console.log('User order: ', appModel.getOrder());
-
-    console.log('Test: Adding user details');
-    const contacts : TContacts = {
-        email: 'test@test.eu',
-        phoneNumber: '+7777777777'
-    }
-    appModel.fillContacts(contacts);
-    const pmt : TPaymentAddress = {
-        payment: TPaymentType.cash,
-        address: 'some long address 7'
-    }
-    appModel.fillAddress(pmt);    
-    console.log('User order: ', appModel.getOrder());
-
-    console.log('Test: placing order')
-    appModel.placeOrder(appModel.getOrder())
-        .then((res) => {console.log(res)});
-}
-
-modelTest();
-*/

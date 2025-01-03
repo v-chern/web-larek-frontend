@@ -1,7 +1,5 @@
 import { Component } from "../../base/Component";
 import { createElement, ensureElement, formatNumber } from "../../../utils/utils";
-import { EventEmitter } from "../../base/events";
-import { SETTINGS } from "../../../utils/constants";
 
 interface IBasketActions {
     onNext: () => void;
