@@ -1,17 +1,8 @@
+import { IFormState, IFormSettings } from "../../../types/components/view/common/Form"
+
 import { Component } from "../../base/Component";
-import { IEvents } from "../../base/events";
 import { ensureElement } from "../../../utils/utils";
-
-interface IFormState {
-    valid: boolean;
-    errors: string[];
-}
-
-interface IFormSettings {
-    onInputChange: (e: Event) => void;
-    onSubmit: (e: Event) => void;
-}
-
+//TODO: Refactor on parametrization via settings;
 export class Form<T, S extends IFormSettings> extends Component<IFormState> {
     protected _submit: HTMLButtonElement;
     protected _errors: HTMLElement;

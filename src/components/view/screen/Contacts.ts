@@ -1,6 +1,7 @@
-import { Form } from "../common/Form";
-import { IContactsData, IContactsSettings } from "../../../types/components/view/partial/Contacts";
+import { IContactsData, IContactsSettings } from "../../../types/components/view/screen/Contacts";
 import { ensureElement } from "../../../utils/utils";
+import { Form } from "../common/Form";
+
 
 export class Contacts extends Form<IContactsData, IContactsSettings> {
     protected _phone: HTMLInputElement;
@@ -11,8 +12,8 @@ export class Contacts extends Form<IContactsData, IContactsSettings> {
     constructor(container: HTMLFormElement, setting: IContactsSettings) {
         super(container, setting);
 
-        this._email = ensureElement(setting.email, container) as HTMLInputElement;
-        this._phone = ensureElement(setting.phone, container) as HTMLInputElement;
+        this._email = ensureElement<HTMLInputElement>(setting.email, container);
+        this._phone = ensureElement<HTMLInputElement>(setting.phone, container);
 
         this._settings = setting;
     }

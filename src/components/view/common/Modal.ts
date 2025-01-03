@@ -1,26 +1,19 @@
-import { Component } from "../../base/Component";
+import { IModalData, IModalSettings } from "../../../types/components/view/common/Modal";
 import { ensureElement } from "../../../utils/utils";
-import { IEvents } from "../../base/events";
+import { Component } from "../../base/Component";
 
-interface IModalData {
-    content: HTMLElement;
-}
-
-interface IModalActions {
-    onClose: () => void;
-}
-
+//TODO: Refactor on parametrization via settings;
 export class Modal extends Component<IModalData> {
     protected _closeButton: HTMLButtonElement;
     protected _content: HTMLElement;
-    protected _actions: IModalActions;
+    protected _settings: IModalSettings;
 
-    constructor(container: HTMLElement, actions?: IModalActions) {
+    constructor(container: HTMLElement, settings?: IModalSettings) {
         super(container);
 
         this._closeButton = ensureElement<HTMLButtonElement>('.modal__close', container);
         this._content = ensureElement<HTMLElement>('.modal__content', container);
-        this._actions = actions;
+        this._settings = settings;
 
         this._closeButton.addEventListener('click', this.close.bind(this));
         this.container.addEventListener('click', this.close.bind(this));
@@ -38,7 +31,7 @@ export class Modal extends Component<IModalData> {
     close() {
         this.container.classList.remove('modal_active');
         this.content = null;
-        this._actions.onClose();
+        this._settings.onClose();
     }
 
     render(data: IModalData): HTMLElement {

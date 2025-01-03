@@ -16,3 +16,17 @@ export interface CardSettings extends IClickable<string> {
     price: string;
 }
 
+//in use below
+export interface ICardData {
+    id: string;
+    title: string;
+    category: string;
+    price: string;
+    image?: string;
+    description?: string;
+    basketIndex?: string;
+}
+
+export interface ICardSettings {
+    onClick: (event: MouseEvent) => void;
+}

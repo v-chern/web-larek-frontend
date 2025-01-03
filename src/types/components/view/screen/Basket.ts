@@ -1,5 +1,13 @@
-import { ProductData } from "../partial/Product";
+export interface IBasketSettings {
+    onNext: () => void;
+}
 
+export interface IBasketData {
+    items: HTMLElement[];
+    total: number;
+}
+
+/*
 export interface BasketData {
     products: ProductData[];
     total: number;
@@ -10,3 +18,4 @@ export interface BasketSettings {
     onClose: () => void;
     onNext: () => void;
 }
+*/

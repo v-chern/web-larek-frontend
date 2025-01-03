@@ -1,6 +1,7 @@
-import { Component } from "../../base/Component";
 import { ISuccessData, ISuccessSettings } from "../../../types/components/view/screen/Success";
 import { ensureElement } from "../../../utils/utils";
+import { Component } from "../../base/Component";
+
 
 export class Success extends Component<ISuccessData> {
     protected _message: HTMLElement;

@@ -1,7 +1,8 @@
-import { Form } from "../common/Form";
-import { IOrderData, IOrderSettings } from "../../../types/components/view/partial/Order";
-import { ensureElement, isEmpty } from "../../../utils/utils";
+import { IOrderData, IOrderSettings } from "../../../types/components/view/screen/Order";
 import { TPaymentType } from "../../../types/components/model/LarekApi";
+import { ensureElement, isEmpty } from "../../../utils/utils";
+import { Form } from "../common/Form";
+
 
 export class Order extends Form<IOrderData, IOrderSettings> {
     protected _payment: {
@@ -16,12 +17,12 @@ export class Order extends Form<IOrderData, IOrderSettings> {
         super(container, settings);
         
         this._payment = {
-            card: ensureElement(settings.paymentCard, container) as HTMLButtonElement,
-            cash: ensureElement(settings.paymentCash, container) as HTMLButtonElement
+            card: ensureElement<HTMLButtonElement>(settings.paymentCard, container),
+            cash: ensureElement<HTMLButtonElement>(settings.paymentCash, container)
         };
         this._payment.card.addEventListener('click', settings.onClick);
         this._payment.cash.addEventListener('click', settings.onClick);
-        this._address = ensureElement(settings.address, container) as HTMLInputElement;
+        this._address = ensureElement<HTMLInputElement>(settings.address, container);
 
         this._settings = settings;
     }

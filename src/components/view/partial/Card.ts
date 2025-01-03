@@ -1,20 +1,9 @@
+import { ICardData, ICardSettings } from "../../../types/components/view/partial/Card";
 import { ensureElement } from "../../../utils/utils";
 import { Component } from "../../base/Component";
 
-interface ICardActions {
-    onClick: (event: MouseEvent) => void;
-}
-
-export interface ICard {
-    id: string;
-    title: string;
-    category: string;
-    price: string;
-    image?: string;
-    description?: string;
-    basketIndex?: string;
-}
-export class Card extends Component<ICard> {
+//TODO: Refactor on parametrization via settings;
+export class Card extends Component<ICardData> {
     protected _title: HTMLElement;
     protected _price: HTMLElement;
     protected _image?: HTMLImageElement;
@@ -23,7 +12,7 @@ export class Card extends Component<ICard> {
     protected _button?: HTMLButtonElement;
     protected _basketIndex?: HTMLElement;
 
-    constructor(protected blockName: string, container: HTMLElement, actions?: ICardActions) {
+    constructor(protected blockName: string, container: HTMLElement, settings?: ICardSettings) {
         super(container);
 
         this._title = ensureElement<HTMLElement>(`.${blockName}__title`, container);
@@ -34,11 +23,11 @@ export class Card extends Component<ICard> {
         this._price = container.querySelector(`.${blockName}__price`);
         this._basketIndex = container.querySelector(`.basket__item-index`);
 
-        if (actions?.onClick) {
+        if (settings?.onClick) {
             if (this._button) {
-                this._button.addEventListener('click', actions.onClick);
+                this._button.addEventListener('click', settings.onClick);
             } else {
-                container.addEventListener('click', actions.onClick);
+                container.addEventListener('click', settings.onClick);
             }
         }
     }

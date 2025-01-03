@@ -1,24 +1,14 @@
+import { IPageData, IPageSettings } from "../../../types/components/view/partial/Page";
+import { ensureElement } from "../../../utils/utils";
 import { Component } from "../../base/Component";
-import { IEvents } from "../../base/events";
-import { cloneTemplate, ensureElement } from "../../../utils/utils";
 
-interface IPageActions {
-    onClick: (event: MouseEvent) => void;
-}
-
-interface IPage {
-    counter: number;
-    gallery: HTMLElement[];
-    locked: boolean;
-}
-
-export class Page extends Component<IPage> {
+export class Page extends Component<IPageData> {
     protected _counter: HTMLElement;
     protected _catalog: HTMLElement;
     protected _wrapper: HTMLElement;
     protected _basket: HTMLElement;
 
-    constructor(container: HTMLElement, actions?: IPageActions) {
+    constructor(container: HTMLElement, settings?: IPageSettings) {
         super(container);
 
         this._counter = ensureElement<HTMLElement>('.header__basket-counter');
@@ -26,7 +16,7 @@ export class Page extends Component<IPage> {
         this._wrapper = ensureElement<HTMLElement>('.page__wrapper');
         this._basket = ensureElement<HTMLElement>('.header__basket');
 
-        this._basket.addEventListener('click', actions.onClick);
+        this._basket.addEventListener('click', settings.onClick);
     }
 
     set counter(value: number) {
