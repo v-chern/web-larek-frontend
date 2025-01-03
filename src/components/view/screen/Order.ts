@@ -3,7 +3,6 @@ import { TPaymentType } from "../../../types/components/model/LarekApi";
 import { ensureElement, isEmpty } from "../../../utils/utils";
 import { Form } from "../common/Form";
 
-
 export class Order extends Form<IOrderData, IOrderSettings> {
     protected _payment: {
         card: HTMLButtonElement,
