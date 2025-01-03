@@ -129,7 +129,7 @@ export class AppState implements IAppState {
             phone: ''
         }
         this.orderResult = null;
-        this.openModal(AppStateModals.none);
+        this.notifyChanged(AppStateChanges.basket);
     }
 
     openModal(modal: AppStateModals): void {

@@ -100,6 +100,7 @@ const contacts = new Contacts(cloneTemplate(contactsTemplate), {
 const success = new Success(cloneTemplate(successTemplate), {
     ...SETTINGS.successSettings,
     onClose: () => {
+        modal.close();
         app.model.clearOrder();
     }
 })
@@ -107,7 +108,10 @@ const success = new Success(cloneTemplate(successTemplate), {
 app.on(AppStateModals.product, () => {
     const item = app.model.selectedProduct;
     const card = new Card('card', cloneTemplate(cardPreviewTemplate), {
-        onClick: () => app.emit(AppStateChanges.addProduct, item)
+        onClick: () => {
+            app.emit(AppStateChanges.addProduct, item);
+            modal.close();
+        }
     });
     modal.render({
         content: card.render({
