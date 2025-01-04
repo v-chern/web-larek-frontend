@@ -73,6 +73,7 @@ export interface IAppState {
     fillContacts(contats: TContacts): void;
     getOrder(): IOrder;
     clearOrder(): void;
+    clearOrderResult(): void;
 
     //UI operations
     openModal(modal: AppStateModals): void;

@@ -86,7 +86,7 @@ const success = new Success(SETTINGS.successTemplate, {
     ...SETTINGS.successSettings,
     onClose: () => {
         modal.close();
-        app.model.clearOrder();
+        app.model.clearOrderResult();
     }
 })
 

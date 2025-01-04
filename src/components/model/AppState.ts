@@ -61,6 +61,7 @@ export class AppState implements IAppState {
         return this.api.createOrder(this.userOrder)
             .then((res) => {
                 this.orderResult = res;
+                this.clearOrder();
                 this.notifyChanged(AppStateChanges.success);
             });
     }
@@ -131,8 +132,12 @@ export class AppState implements IAppState {
             email: '',
             phone: ''
         }
-        this.orderResult = null;
+
         this.notifyChanged(AppStateChanges.basket);
+    }
+
+    clearOrderResult(): void {
+        this.orderResult = null;
     }
 
     openModal(modal: AppStateModals): void {
