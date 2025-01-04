@@ -10,7 +10,6 @@ import { SETTINGS, API_URL, CDN_URL } from './utils/constants';
 import { LarekApi } from './components/model/LarekAPI';
 import { AppState } from './components/model/AppState';
 import { AppStateEmitter } from './components/model/AppStateEmitter';
-
 import { Page } from './components/view/partial/Page';
 import { Modal } from './components/view/common/Modal';
 import { Basket } from './components/view/screen/Basket';
@@ -22,7 +21,6 @@ import { Success } from './components/view/screen/Success';
 const api = new LarekApi(CDN_URL, API_URL);
 const app = new AppStateEmitter(api, SETTINGS.appState, AppState);
 
-//modals
 const page = new Page(document.body, {
     ...SETTINGS.pageSettings,
     onClick: () => {
@@ -30,6 +28,7 @@ const page = new Page(document.body, {
     }
 });
 
+//modals
 const modal = new Modal(SETTINGS.modalContainer, {
     ...SETTINGS.modalSettings,
     onClose: () => {
@@ -63,7 +62,6 @@ const order = new Order(SETTINGS.orderTemplate, {
             payment: order.payment,
             address: order.address
         };
-        console.log('Form submit', data);
         app.emit(AppStateChanges.order, data);
     }
 });
@@ -79,8 +77,7 @@ const contacts = new Contacts(SETTINGS.contactsTemplate, {
         const data: TContacts = {
             email: contacts.email,
             phoneNumber: contacts.phone
-        }
-        console.log('Form submit', data);
+        };
         app.emit(AppStateChanges.contacts, data);
     }
 })
@@ -115,8 +112,6 @@ app.on(AppStateModals.product, () => {
  });
 
 app.on(AppStateModals.basket, () => {
-    console.log('modal: Basket');
-
     basket.items = app.model.getBasketItems().map((item, idx) => {
         const card = new Card(SETTINGS.cardBasketTemplate, {
             ...SETTINGS.cardBasketSettings,
@@ -136,7 +131,6 @@ app.on(AppStateModals.basket, () => {
  });
 
 app.on(AppStateModals.order, () => {
-    console.log('modal: Order');
     modal.render({ 
         content: order.render({
             address: app.model.getOrder().address,
@@ -149,7 +143,6 @@ app.on(AppStateModals.order, () => {
 });
 
 app.on(AppStateModals.contacts, () => {
-    console.log('modal: Contacts');
     modal.render({
         content: contacts.render({
             valid: false,
@@ -160,8 +153,6 @@ app.on(AppStateModals.contacts, () => {
  });
 
 app.on(AppStateModals.success, () => {
-    console.log('modal: Success');
-    console.log(app.model.orderResult);
     modal.render({
         content: success.render({
             message: SETTINGS.successSettings.formatMessage(app.model.orderResult.total)
@@ -170,12 +161,10 @@ app.on(AppStateModals.success, () => {
 });
 
 app.on(AppStateChanges.modal, ({ previous, current }: ModalChange)  => {
-    console.log('app change: Modal');
     page.locked = current !== AppStateModals.none;
 });
 
 app.on(AppStateChanges.catalog, () => {
-    console.log(`app: Catalog`);
     page.catalog = Array.from(app.model.products.items.values()).map((item) => {
         const card = new Card(SETTINGS.cardTemplate, {
             ...SETTINGS.cardSettings,
@@ -198,17 +187,14 @@ app.on(AppStateChanges.product, () => {
 });
 
 app.on(AppStateChanges.addProduct, (item: ICardData) => {
-    console.log('app change: Add to basket', item.id);
     app.model.addToBasket(item.id);
 });
 
 app.on(AppStateChanges.removeProduct, (item: ICardData) => {
-    console.log('app change: Remove from basket', item.id);
     app.model.removeFromBasket(item.id);
 });
 
 app.on(AppStateChanges.basket, () => {
-    console.log('app change: Basket change');
     page.counter = app.model.getBasketItems().length;
     if (app.model.openedModal === AppStateModals.basket) {
         app.emit(AppStateModals.basket);
@@ -216,26 +202,20 @@ app.on(AppStateChanges.basket, () => {
 });
 
 app.on(AppStateChanges.order, (data: TPaymentAddress) => {
-    console.log('app change: save address');
     app.model.fillAddress(data);
     app.model.openModal(AppStateModals.contacts);
-    console.log(app.model.getOrder());
 });
 
 app.on(AppStateChanges.contacts, (data: TContacts) => {
-    console.log('app change: save contacts');
     app.model.fillContacts(data);
     app.emit(AppStateChanges.submit);
 });
 
 app.on(AppStateChanges.submit, () => {
-    console.log('app change: submit order');
     app.model.placeOrder();
 });
 
 app.on(AppStateChanges.success, () => {
-    console.log('app change: success order');
-    console.log(app.model.orderResult);
     app.model.openModal(AppStateModals.success);
 })
 

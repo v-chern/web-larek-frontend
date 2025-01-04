@@ -2,7 +2,6 @@ import { IBasketData, IBasketSettings } from "../../../types/components/view/scr
 import { cloneTemplate, createElement, ensureElement } from "../../../utils/utils";
 import { Component } from "../../base/Component";
 
-//TODO: refactor to user settings
 export class Basket extends Component<IBasketData> {
     protected _list: HTMLElement;
     protected _total: HTMLElement;

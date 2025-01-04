@@ -2,7 +2,6 @@ import { IModalData, IModalSettings } from "../../../types/components/view/commo
 import { ensureElement } from "../../../utils/utils";
 import { Component } from "../../base/Component";
 
-//TODO: Refactor on parametrization via settings;
 export class Modal<T, S extends IModalSettings> extends Component<IModalData> {
     protected _closeButton: HTMLButtonElement;
     protected _content: HTMLElement;
