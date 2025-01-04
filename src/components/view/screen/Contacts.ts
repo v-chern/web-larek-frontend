@@ -1,5 +1,5 @@
 import { IContactsData, IContactsSettings } from "../../../types/components/view/screen/Contacts";
-import { ensureElement } from "../../../utils/utils";
+import { ensureElement, cloneTemplate } from "../../../utils/utils";
 import { Form } from "../common/Form";
 
 
@@ -9,7 +9,8 @@ export class Contacts extends Form<IContactsData, IContactsSettings> {
 
     protected _settings: IContactsSettings;
 
-    constructor(container: HTMLFormElement, setting: IContactsSettings) {
+    constructor(template:string, setting: IContactsSettings) {
+        const container: HTMLFormElement = cloneTemplate(ensureElement<HTMLTemplateElement>(template));      
         super(container, setting);
 
         this._email = ensureElement<HTMLInputElement>(setting.email, container);

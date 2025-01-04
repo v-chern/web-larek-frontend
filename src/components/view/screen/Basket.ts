@@ -1,5 +1,5 @@
 import { IBasketData, IBasketSettings } from "../../../types/components/view/screen/Basket";
-import { createElement, ensureElement } from "../../../utils/utils";
+import { cloneTemplate, createElement, ensureElement } from "../../../utils/utils";
 import { Component } from "../../base/Component";
 
 //TODO: refactor to user settings
@@ -8,8 +8,10 @@ export class Basket extends Component<IBasketData> {
     protected _total: HTMLElement;
     protected _button: HTMLElement;
 
-    constructor(container: HTMLElement, settings?: IBasketSettings) {
+    constructor(template: string, settings: IBasketSettings) {
+        const container: HTMLElement = cloneTemplate<HTMLElement>(ensureElement<HTMLTemplateElement>(template));
         super(container);
+
         this._list = ensureElement<HTMLElement>(settings.list, this.container);
         this._total = ensureElement<HTMLElement>(settings.total, this.container);
         this._button = ensureElement<HTMLElement>(settings.button, this.container);

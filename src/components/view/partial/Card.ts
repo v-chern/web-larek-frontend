@@ -1,5 +1,5 @@
 import { ICardData, ICardSettings } from "../../../types/components/view/partial/Card";
-import { ensureElement } from "../../../utils/utils";
+import { ensureElement, cloneTemplate} from "../../../utils/utils";
 import { Component } from "../../base/Component";
 
 export class Card extends Component<ICardData> {
@@ -11,7 +11,8 @@ export class Card extends Component<ICardData> {
     protected _button?: HTMLButtonElement;
     protected _basketIndex?: HTMLElement;
 
-    constructor(container: HTMLElement, settings: ICardSettings) {
+    constructor(template: string, settings: ICardSettings) {
+        const container: HTMLElement = cloneTemplate<HTMLElement>(ensureElement<HTMLTemplateElement>(template));
         super(container);
 
         this._title = ensureElement<HTMLElement>(settings.title, container);

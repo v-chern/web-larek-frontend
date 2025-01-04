@@ -40,8 +40,8 @@ export const SETTINGS: Settings = {
         button: '.basket__button'
     },
 
-    basketCardTemplate: '#card-basket',
-    basketCardSettings: {
+    cardBasketTemplate: '#card-basket',
+    cardBasketSettings: {
         title: '.card__title',
         price: '.card__price',
         basketIndex: '.basket__item-index'

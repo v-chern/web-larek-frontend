@@ -36,8 +36,8 @@ export interface Settings {
         button: string
     },
 
-    basketCardTemplate: string,
-    basketCardSettings: {
+    cardBasketTemplate: string,
+    cardBasketSettings: {
         title: string,
         price: string,
         basketIndex: string

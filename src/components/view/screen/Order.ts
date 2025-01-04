@@ -1,6 +1,6 @@
 import { IOrderData, IOrderSettings } from "../../../types/components/view/screen/Order";
 import { TPaymentType } from "../../../types/components/model/LarekApi";
-import { ensureElement, isEmpty } from "../../../utils/utils";
+import { ensureElement, isEmpty, cloneTemplate} from "../../../utils/utils";
 import { Form } from "../common/Form";
 
 export class Order extends Form<IOrderData, IOrderSettings> {
@@ -9,10 +9,11 @@ export class Order extends Form<IOrderData, IOrderSettings> {
         cash: HTMLButtonElement
     }
     protected _address: HTMLInputElement;
-
+    
     protected _settings: IOrderSettings;
 
-    constructor(container: HTMLFormElement, settings: IOrderSettings) {
+    constructor(template: string, settings: IOrderSettings) {
+        const container: HTMLFormElement = cloneTemplate(ensureElement<HTMLTemplateElement>(template));
         super(container, settings);
         
         this._payment = {

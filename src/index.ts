@@ -1,17 +1,15 @@
 import './scss/styles.scss';
 
 import { TContacts, TPaymentAddress, TPaymentType } from './types/components/model/LarekApi';
-import { AppStateChanges, AppStateModals, IAppStateSettings } from './types/components/model/AppState';
+import { AppStateChanges, AppStateModals } from './types/components/model/AppState';
 import { ModalChange } from './types/components/model/AppStateEmitter';
-import { ICardData, ICardSettings } from './types/components/view/partial/Card';
+import { ICardData } from './types/components/view/partial/Card';
 
 import { SETTINGS, API_URL, CDN_URL } from './utils/constants';
 
 import { LarekApi } from './components/model/LarekAPI';
 import { AppState } from './components/model/AppState';
 import { AppStateEmitter } from './components/model/AppStateEmitter';
-
-import { cloneTemplate, ensureElement } from './utils/utils';
 
 import { Page } from './components/view/partial/Page';
 import { Modal } from './components/view/common/Modal';
@@ -24,14 +22,6 @@ import { Success } from './components/view/screen/Success';
 const api = new LarekApi(CDN_URL, API_URL);
 const app = new AppStateEmitter(api, SETTINGS.appState, AppState);
 
-const cardCatalogTemplate = ensureElement<HTMLTemplateElement>('#card-catalog');
-const cardPreviewTemplate = ensureElement<HTMLTemplateElement>('#card-preview');
-const basketTemplate = ensureElement<HTMLTemplateElement>('#basket');
-const cardBasketTemplate = ensureElement<HTMLTemplateElement>('#card-basket');
-const orderTemplate = ensureElement<HTMLTemplateElement>('#order');
-const contactsTemplate = ensureElement<HTMLTemplateElement>('#contacts');
-const successTemplate = ensureElement<HTMLTemplateElement>('#success');
-
 //modals
 const page = new Page(document.body, {
     ...SETTINGS.pageSettings,
@@ -40,21 +30,21 @@ const page = new Page(document.body, {
     }
 });
 
-const modal = new Modal(ensureElement<HTMLElement>(SETTINGS.modalContainer), {
+const modal = new Modal(SETTINGS.modalContainer, {
     ...SETTINGS.modalSettings,
     onClose: () => {
         app.model.openModal(AppStateModals.none);
     }
 });
 
-const basket = new Basket(cloneTemplate(basketTemplate), {
+const basket = new Basket(SETTINGS.basketTemplate, {
     ...SETTINGS.basketSettings,
     onNext: () => {
         app.model.openModal(AppStateModals.order);
     }
 });
 
-const order = new Order(cloneTemplate(orderTemplate), {
+const order = new Order(SETTINGS.orderTemplate, {
     ...SETTINGS.orderSettings,
     ...SETTINGS.orderErrors,
     onClick: (e: Event) => {
@@ -78,7 +68,7 @@ const order = new Order(cloneTemplate(orderTemplate), {
     }
 });
 
-const contacts = new Contacts(cloneTemplate(contactsTemplate), {
+const contacts = new Contacts(SETTINGS.contactsTemplate, {
     ...SETTINGS.contactsSettings,
     ...SETTINGS.contactsErrors,
     onInputChange: (e:Event) => {
@@ -95,7 +85,7 @@ const contacts = new Contacts(cloneTemplate(contactsTemplate), {
     }
 })
 
-const success = new Success(cloneTemplate(successTemplate), {
+const success = new Success(SETTINGS.successTemplate, {
     ...SETTINGS.successSettings,
     onClose: () => {
         modal.close();
@@ -106,7 +96,7 @@ const success = new Success(cloneTemplate(successTemplate), {
 //logic
 app.on(AppStateModals.product, () => {
     const item = app.model.selectedProduct;
-    const card = new Card(cloneTemplate(cardPreviewTemplate), {
+    const card = new Card(SETTINGS.cardPreviewTemplate, {
         ...SETTINGS.cardPreviewSettings,
         onClick: () => {
             app.emit(AppStateChanges.addProduct, item);
@@ -128,8 +118,8 @@ app.on(AppStateModals.basket, () => {
     console.log('modal: Basket');
 
     basket.items = app.model.getBasketItems().map((item, idx) => {
-        const card = new Card(cloneTemplate(cardBasketTemplate), {
-            ...SETTINGS.basketCardSettings,
+        const card = new Card(SETTINGS.cardBasketTemplate, {
+            ...SETTINGS.cardBasketSettings,
             onClick: () => {
                 app.emit(AppStateChanges.removeProduct, item);
             }
@@ -187,7 +177,7 @@ app.on(AppStateChanges.modal, ({ previous, current }: ModalChange)  => {
 app.on(AppStateChanges.catalog, () => {
     console.log(`app: Catalog`);
     page.catalog = Array.from(app.model.products.items.values()).map((item) => {
-        const card = new Card(cloneTemplate(cardCatalogTemplate), {
+        const card = new Card(SETTINGS.cardTemplate, {
             ...SETTINGS.cardSettings,
             onClick: () => {
                 app.model.selectProduct(item.id);

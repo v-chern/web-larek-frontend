@@ -8,7 +8,8 @@ export class Modal<T, S extends IModalSettings> extends Component<IModalData> {
     protected _content: HTMLElement;
     protected _settings: IModalSettings;
 
-    constructor(container: HTMLElement, settings?: S) {
+    constructor(selector: string, settings?: S) {
+        const container: HTMLElement = ensureElement<HTMLElement>(selector);
         super(container);
 
         this._closeButton = ensureElement<HTMLButtonElement>(settings.close, container);
