@@ -3,21 +3,22 @@ import { ensureElement } from "../../../utils/utils";
 import { Component } from "../../base/Component";
 
 //TODO: Refactor on parametrization via settings;
-export class Modal extends Component<IModalData> {
+export class Modal<T, S extends IModalSettings> extends Component<IModalData> {
     protected _closeButton: HTMLButtonElement;
     protected _content: HTMLElement;
     protected _settings: IModalSettings;
 
-    constructor(container: HTMLElement, settings?: IModalSettings) {
+    constructor(container: HTMLElement, settings?: S) {
         super(container);
 
-        this._closeButton = ensureElement<HTMLButtonElement>('.modal__close', container);
-        this._content = ensureElement<HTMLElement>('.modal__content', container);
-        this._settings = settings;
+        this._closeButton = ensureElement<HTMLButtonElement>(settings.close, container);
+        this._content = ensureElement<HTMLElement>(settings.content, container);
 
         this._closeButton.addEventListener('click', this.close.bind(this));
         this.container.addEventListener('click', this.close.bind(this));
         this._content.addEventListener('click', (event) => event.stopPropagation());
+
+        this._settings = settings;
     }
 
     set content(value: HTMLElement) {
@@ -25,11 +26,11 @@ export class Modal extends Component<IModalData> {
     }
 
     open() {
-        this.container.classList.add('modal_active');
+        this.container.classList.add(this._settings.activeClass);
     }
 
     close() {
-        this.container.classList.remove('modal_active');
+        this.container.classList.remove(this._settings.activeClass);
         this.content = null;
         this._settings.onClose();
     }

@@ -1,12 +1,13 @@
 import { IChangeable, IClickable } from "../../base/View";
 import { TPaymentType } from "../../model/LarekApi";
+import { IFormSettings } from "../common/Form";
 
 export interface IOrderData {
     payment: TPaymentType;
     address: string;
 }
 
-export interface IOrderSettings {
+export interface IOrderSettings extends IFormSettings {
     paymentCard: string;
     paymentCash: string;
     paymentActive: string;
@@ -14,6 +15,4 @@ export interface IOrderSettings {
     paymentError: string;
     addressError: string;
     onClick: (e: Event) => void;
-    onInputChange: (e: Event) => void;
-    onSubmit: (e: Event) => void;
 }

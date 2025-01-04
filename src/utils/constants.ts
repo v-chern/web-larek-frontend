@@ -11,12 +11,8 @@ export const SETTINGS: Settings = {
         wrapper: '.page__wrapper',
         counter: '.header__basket-counter',
         basket: '.header__basket',
-        lockedClass: '.page__wrapper_locked'
-    },
-
-    gallerySelector: '.gallery',
-    gallerySettings: {
-        itemClass: 'gallery__item',
+        gallery: '.gallery',
+        lockedClass: '.page__wrapper_locked',
     },
 
     cardTemplate: '#card-catalog',
@@ -27,30 +23,34 @@ export const SETTINGS: Settings = {
         price: '.card__price',
     },
 
-    productTemplate: '#card-preview',
-    productSettings: {
+    cardPreviewTemplate: '#card-preview',
+    cardPreviewSettings: {
         image: '.card__image',
         category: '.card__category',
         title: '.card__title',
         desciption: '.card__text',
         price: '.card__price',
-        compactClass: '.card_compact',
+        button: '.card__button'
     },
 
     basketTemplate: '#basket',
     basketSettings: {
-        itemClass: 'basket__item',
-        itemIndexClass: '.basket__item-index',
+        list: '.basket__list',
+        total: '.basket__price',
+        button: '.basket__button'
     },
 
     basketCardTemplate: '#card-basket',
     basketCardSettings: {
         title: '.card__title',
         price: '.card__price',
+        basketIndex: '.basket__item-index'
     },
 
     orderTemplate: '#order',
     orderSettings: {
+        submit: 'button[type=submit]',
+        errors: '.form__errors',
         paymentCard: 'button[name=card]',
         paymentCash: 'button[name=cash]',
         paymentActive: 'button_alt-active',
@@ -59,6 +59,8 @@ export const SETTINGS: Settings = {
 
     contactsTemplate: '#contacts',
     contactsSettings: {
+        submit: 'button[type=submit]',
+        errors: '.form__errors',
         email: 'input[name=phone]',
         phone: 'input[name=email]',
     },
@@ -77,9 +79,7 @@ export const SETTINGS: Settings = {
     modalSettings: {
         close: '.modal__close',
         content: '.modal__content',
-        message: '.modal__message',
-        activeClass: 'modal_active',
-        errorMessageClass: '.modal__message_error',
+        activeClass: 'modal_active'
     },
 
     //form validation errors

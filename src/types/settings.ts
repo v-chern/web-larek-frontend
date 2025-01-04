@@ -7,12 +7,8 @@ export interface Settings {
         wrapper: string;
         counter: string;
         basket: string;
+        gallery: string;
         lockedClass: string;
-    };
-
-    gallerySelector: string;
-    gallerySettings: {
-        itemClass: string;
     };
 
     cardTemplate: string;
@@ -23,40 +19,46 @@ export interface Settings {
         price: string;
     };
 
-    productTemplate: string;
-    productSettings: {
+    cardPreviewTemplate: string;
+    cardPreviewSettings: {
         image: string;
         category: string;
         title: string;
         desciption: string;
         price: string;
-        compactClass: string;
+        button: string;
     };
 
     basketTemplate: string;
     basketSettings: {
-        itemClass: string,
-        itemIndexClass: string,
+        list: string,
+        total: string,
+        button: string
     },
 
     basketCardTemplate: string,
     basketCardSettings: {
         title: string,
         price: string,
+        basketIndex: string
     },
 
     orderTemplate: string;
     orderSettings: {
+        submit: string;
+        errors: string;
         paymentCard: string;
         paymentCash: string;
         paymentActive: string;
         address: string;
-    };
+    },
     contactsTemplate: string;
     contactsSettings: {
+        submit: string;
+        errors: string;
         email: string;
         phone: string;
-    };
+    },
 
     successTemplate: string;
     successSettings: {
@@ -79,9 +81,7 @@ export interface Settings {
     modalSettings: {
         close: string;
         content: string;
-        message: string,
         activeClass: string;
-        errorMessageClass: string;
     };
 
     //model settings 

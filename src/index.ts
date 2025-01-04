@@ -3,7 +3,7 @@ import './scss/styles.scss';
 import { TContacts, TPaymentAddress, TPaymentType } from './types/components/model/LarekApi';
 import { AppStateChanges, AppStateModals, IAppStateSettings } from './types/components/model/AppState';
 import { ModalChange } from './types/components/model/AppStateEmitter';
-import { CardData } from './types/components/view/partial/Card';
+import { ICardData, ICardSettings } from './types/components/view/partial/Card';
 
 import { SETTINGS, API_URL, CDN_URL } from './utils/constants';
 
@@ -34,18 +34,21 @@ const successTemplate = ensureElement<HTMLTemplateElement>('#success');
 
 //modals
 const page = new Page(document.body, {
+    ...SETTINGS.pageSettings,
     onClick: () => {
         app.model.openModal(AppStateModals.basket);
     }
 });
 
 const modal = new Modal(ensureElement<HTMLElement>(SETTINGS.modalContainer), {
+    ...SETTINGS.modalSettings,
     onClose: () => {
         app.model.openModal(AppStateModals.none);
     }
 });
 
 const basket = new Basket(cloneTemplate(basketTemplate), {
+    ...SETTINGS.basketSettings,
     onNext: () => {
         app.model.openModal(AppStateModals.order);
     }
@@ -103,7 +106,8 @@ const success = new Success(cloneTemplate(successTemplate), {
 //logic
 app.on(AppStateModals.product, () => {
     const item = app.model.selectedProduct;
-    const card = new Card('card', cloneTemplate(cardPreviewTemplate), {
+    const card = new Card(cloneTemplate(cardPreviewTemplate), {
+        ...SETTINGS.cardPreviewSettings,
         onClick: () => {
             app.emit(AppStateChanges.addProduct, item);
             modal.close();
@@ -124,7 +128,8 @@ app.on(AppStateModals.basket, () => {
     console.log('modal: Basket');
 
     basket.items = app.model.getBasketItems().map((item, idx) => {
-        const card = new Card('card', cloneTemplate(cardBasketTemplate), {
+        const card = new Card(cloneTemplate(cardBasketTemplate), {
+            ...SETTINGS.basketCardSettings,
             onClick: () => {
                 app.emit(AppStateChanges.removeProduct, item);
             }
@@ -182,7 +187,8 @@ app.on(AppStateChanges.modal, ({ previous, current }: ModalChange)  => {
 app.on(AppStateChanges.catalog, () => {
     console.log(`app: Catalog`);
     page.catalog = Array.from(app.model.products.items.values()).map((item) => {
-        const card = new Card('card', cloneTemplate(cardCatalogTemplate), {
+        const card = new Card(cloneTemplate(cardCatalogTemplate), {
+            ...SETTINGS.cardSettings,
             onClick: () => {
                 app.model.selectProduct(item.id);
             }
@@ -201,12 +207,12 @@ app.on(AppStateChanges.product, () => {
     app.model.openModal(AppStateModals.product);
 });
 
-app.on(AppStateChanges.addProduct, (item: CardData) => {
+app.on(AppStateChanges.addProduct, (item: ICardData) => {
     console.log('app change: Add to basket', item.id);
     app.model.addToBasket(item.id);
 });
 
-app.on(AppStateChanges.removeProduct, (item: CardData) => {
+app.on(AppStateChanges.removeProduct, (item: ICardData) => {
     console.log('app change: Remove from basket', item.id);
     app.model.removeFromBasket(item.id);
 });

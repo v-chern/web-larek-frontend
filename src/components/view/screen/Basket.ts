@@ -1,5 +1,5 @@
 import { IBasketData, IBasketSettings } from "../../../types/components/view/screen/Basket";
-import { createElement, ensureElement, formatNumber } from "../../../utils/utils";
+import { createElement, ensureElement } from "../../../utils/utils";
 import { Component } from "../../base/Component";
 
 //TODO: refactor to user settings
@@ -10,9 +10,9 @@ export class Basket extends Component<IBasketData> {
 
     constructor(container: HTMLElement, settings?: IBasketSettings) {
         super(container);
-        this._list = ensureElement<HTMLElement>('.basket__list', this.container);
-        this._total = this.container.querySelector('.basket__price');
-        this._button = this.container.querySelector('.basket__button');
+        this._list = ensureElement<HTMLElement>(settings.list, this.container);
+        this._total = ensureElement<HTMLElement>(settings.total, this.container);
+        this._button = ensureElement<HTMLElement>(settings.button, this.container);
 
         if (this._button) {
             this._button.addEventListener('click', settings.onNext);

@@ -7,16 +7,19 @@ export class Page extends Component<IPageData> {
     protected _catalog: HTMLElement;
     protected _wrapper: HTMLElement;
     protected _basket: HTMLElement;
+    protected _settings: IPageSettings;
 
-    constructor(container: HTMLElement, settings?: IPageSettings) {
+    constructor(container: HTMLElement, settings: IPageSettings) {
         super(container);
 
-        this._counter = ensureElement<HTMLElement>('.header__basket-counter');
-        this._catalog = ensureElement<HTMLElement>('.gallery');
-        this._wrapper = ensureElement<HTMLElement>('.page__wrapper');
-        this._basket = ensureElement<HTMLElement>('.header__basket');
+        this._counter = ensureElement<HTMLElement>(settings.counter);
+        this._catalog = ensureElement<HTMLElement>(settings.gallery);
+        this._wrapper = ensureElement<HTMLElement>(settings.wrapper);
+        this._basket = ensureElement<HTMLElement>(settings.basket);
 
         this._basket.addEventListener('click', settings.onClick);
+
+        this._settings = settings;
     }
 
     set counter(value: number) {
@@ -29,9 +32,9 @@ export class Page extends Component<IPageData> {
 
     set locked(value: boolean) {
         if (value) {
-            this._wrapper.classList.add('page__wrapper_locked');
+            this._wrapper.classList.add(this._settings.lockedClass);
         } else {
-            this._wrapper.classList.remove('page__wrapper_locked');
+            this._wrapper.classList.remove(this._settings.lockedClass);
         }
     }
 }

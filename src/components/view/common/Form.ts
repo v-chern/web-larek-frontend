@@ -2,7 +2,7 @@ import { IFormState, IFormSettings } from "../../../types/components/view/common
 
 import { Component } from "../../base/Component";
 import { ensureElement } from "../../../utils/utils";
-//TODO: Refactor on parametrization via settings;
+
 export class Form<T, S extends IFormSettings> extends Component<IFormState> {
     protected _submit: HTMLButtonElement;
     protected _errors: HTMLElement;
@@ -10,8 +10,8 @@ export class Form<T, S extends IFormSettings> extends Component<IFormState> {
     constructor(protected container: HTMLFormElement, settings: S) {
         super(container);
 
-        this._submit = ensureElement<HTMLButtonElement>('button[type=submit]', this.container);
-        this._errors = ensureElement<HTMLElement>('.form__errors', this.container);
+        this._submit = ensureElement<HTMLButtonElement>(settings.submit, this.container);
+        this._errors = ensureElement<HTMLElement>(settings.errors, this.container);
 
         this.container.addEventListener('input', settings.onInputChange);
         this.container.addEventListener('submit', settings.onSubmit);

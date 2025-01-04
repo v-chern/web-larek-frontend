@@ -1,10 +1,4 @@
-//page.ts
-
 import { IClickable } from "../../base/View";
-
-export interface IPageSettings {
-    onClick: (event: MouseEvent) => void;
-}
 
 export interface IPageData {
     counter: number;
@@ -12,15 +6,11 @@ export interface IPageData {
     locked: boolean;
 }
 
-/*
-export interface PageData {
-    counter: number;
-    isLocked: boolean;
-}
-
-export interface PageSettings extends IClickable<never> {
+export interface IPageSettings {
     wrapper: string;
     counter: string;
     basket: string;
+    gallery: string;
     lockedClass: string;
-}*/
+    onClick: (event: MouseEvent) => void;
+}

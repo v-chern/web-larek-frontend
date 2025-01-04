@@ -2,7 +2,6 @@ import { ICardData, ICardSettings } from "../../../types/components/view/partial
 import { ensureElement } from "../../../utils/utils";
 import { Component } from "../../base/Component";
 
-//TODO: Refactor on parametrization via settings;
 export class Card extends Component<ICardData> {
     protected _title: HTMLElement;
     protected _price: HTMLElement;
@@ -12,23 +11,21 @@ export class Card extends Component<ICardData> {
     protected _button?: HTMLButtonElement;
     protected _basketIndex?: HTMLElement;
 
-    constructor(protected blockName: string, container: HTMLElement, settings?: ICardSettings) {
+    constructor(container: HTMLElement, settings: ICardSettings) {
         super(container);
 
-        this._title = ensureElement<HTMLElement>(`.${blockName}__title`, container);
-        this._image = container.querySelector(`.${blockName}__image`);
-        this._button = container.querySelector(`.${blockName}__button`);
-        this._description = container.querySelector(`.${blockName}__text`);
-        this._category = container.querySelector(`.${blockName}__category`);
-        this._price = container.querySelector(`.${blockName}__price`);
-        this._basketIndex = container.querySelector(`.basket__item-index`);
+        this._title = ensureElement<HTMLElement>(settings.title, container);
+        this._image = container.querySelector(settings.image);
+        this._button = container.querySelector(settings.button);
+        this._description = container.querySelector(settings.desciption);
+        this._category = container.querySelector(settings.category);
+        this._price = container.querySelector(settings.price);
+        this._basketIndex = container.querySelector(settings.basketIndex);
 
-        if (settings?.onClick) {
-            if (this._button) {
-                this._button.addEventListener('click', settings.onClick);
-            } else {
-                container.addEventListener('click', settings.onClick);
-            }
+        if (this._button) {
+            this._button.addEventListener('click', settings.onClick);
+        } else {
+            container.addEventListener('click', settings.onClick);
         }
     }
 
