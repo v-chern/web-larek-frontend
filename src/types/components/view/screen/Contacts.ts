@@ -1,4 +1,3 @@
-import { IChangeable } from "../../base/View";
 import { IFormSettings } from "../common/Form";
 
 export interface IContactsData {

@@ -1,7 +1,3 @@
-import { IClickable } from "../../base/View";
-import { IModalSettings } from "../common/Modal";
-
-//in use below
 export interface ICardData {
     id: string;
     title: string;

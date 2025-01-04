@@ -1,5 +1,3 @@
-//UserForm.ts
-
 export interface IFormState {
     valid: boolean;
     errors: string[];

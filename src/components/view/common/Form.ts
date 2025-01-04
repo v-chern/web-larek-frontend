@@ -25,7 +25,7 @@ export class Form<T, S extends IFormSettings> extends Component<IFormState> {
         this.setText(this._errors, value);
     }
 
-    render(state: Partial<T> & IFormState) {
+    render(state: Partial<T> & IFormState): HTMLFormElement {
         const {valid, errors, ...inputs} = state;
         super.render({valid, errors});
         Object.assign(this, inputs);

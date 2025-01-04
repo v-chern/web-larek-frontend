@@ -119,7 +119,7 @@ export class AppState implements IAppState {
         return this.userOrder;
     }
 
-    clearOrder() {
+    clearOrder(): void {
         this.userOrder = {
             items: [],
             total: 0,

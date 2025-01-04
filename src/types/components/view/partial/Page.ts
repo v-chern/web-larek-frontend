@@ -1,5 +1,3 @@
-import { IClickable } from "../../base/View";
-
 export interface IPageData {
     counter: number;
     gallery: HTMLElement[];
