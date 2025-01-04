@@ -31,7 +31,7 @@ export class Page extends Component<IPageData> {
     }
 
     set locked(value: boolean) {
-        if (value) {
+         if (value) {
             this._wrapper.classList.add(this._settings.lockedClass);
         } else {
             this._wrapper.classList.remove(this._settings.lockedClass);

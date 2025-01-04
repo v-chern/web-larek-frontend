@@ -21,6 +21,7 @@ import { Success } from './components/view/screen/Success';
 const api = new LarekApi(CDN_URL, API_URL);
 const app = new AppStateEmitter(api, SETTINGS.appState, AppState);
 
+//modals
 const page = new Page(document.body, {
     ...SETTINGS.pageSettings,
     onClick: () => {
@@ -28,7 +29,6 @@ const page = new Page(document.body, {
     }
 });
 
-//modals
 const modal = new Modal(SETTINGS.modalContainer, {
     ...SETTINGS.modalSettings,
     onClose: () => {
@@ -77,7 +77,7 @@ const contacts = new Contacts(SETTINGS.contactsTemplate, {
         const data: TContacts = {
             email: contacts.email,
             phoneNumber: contacts.phone
-        };
+        }
         app.emit(AppStateChanges.contacts, data);
     }
 })

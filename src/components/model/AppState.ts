@@ -76,7 +76,10 @@ export class AppState implements IAppState {
 
     addToBasket(id: string): void {
         const productDetails = this.products.items.get(id);
-        if (productDetails) {
+        if (!productDetails) {
+            throw new Error (`Invalid product id: ${id}`);
+        }
+        if (!this.userOrder.items.includes(id)) {
             this.userOrder.items.push(id);
             this.userOrder.total += productDetails.price;
             this.notifyChanged(AppStateChanges.basket);

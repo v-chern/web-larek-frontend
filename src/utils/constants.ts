@@ -12,7 +12,7 @@ export const SETTINGS: Settings = {
         counter: '.header__basket-counter',
         basket: '.header__basket',
         gallery: '.gallery',
-        lockedClass: '.page__wrapper_locked',
+        lockedClass: 'page__wrapper_locked',
     },
 
     cardTemplate: '#card-catalog',
