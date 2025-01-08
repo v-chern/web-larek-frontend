@@ -48,7 +48,8 @@ export const SETTINGS: Settings = {
     cardBasketSettings: {
         title: '.card__title',
         price: '.card__price',
-        basketIndex: '.basket__item-index'
+        basketIndex: '.basket__item-index',
+        button: '.card__button'
     },
 
     orderTemplate: '#order',

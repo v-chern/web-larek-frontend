@@ -35,16 +35,17 @@ export interface Settings {
 
     basketTemplate: string;
     basketSettings: {
-        list: string,
-        total: string,
-        button: string
+        list: string;
+        total: string;
+        button: string;
     },
 
     cardBasketTemplate: string,
     cardBasketSettings: {
-        title: string,
-        price: string,
-        basketIndex: string
+        title: string;
+        price: string;
+        basketIndex: string;
+        button: string;
     },
 
     orderTemplate: string;

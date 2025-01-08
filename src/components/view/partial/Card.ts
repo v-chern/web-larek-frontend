@@ -26,7 +26,9 @@ export class Card extends Component<ICardData> {
 
         if (this._button) {
             this._button.addEventListener('click', settings.onClick);
-            this.setText(this._button, settings.buttonText.active);
+            if (settings.buttonText) {
+                this.setText(this._button, settings.buttonText.active);
+            }
         } else {
             container.addEventListener('click', settings.onClick);
         }
