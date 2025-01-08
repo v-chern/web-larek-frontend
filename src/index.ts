@@ -147,7 +147,7 @@ app.on(AppStateModals.success, () => {
     })
 });
 
-app.on(AppStateChanges.modal, ({ previous, current }: ModalChange)  => {
+app.on(AppStateChanges.modal, ({ current }: ModalChange)  => {
     page.locked = current !== AppStateModals.none;
 });
 
@@ -169,10 +169,6 @@ app.on(AppStateChanges.catalog, () => {
             price: item.price
         });
     });
-});
-
-app.on(AppStateChanges.product, () => {
-    app.model.openModal(AppStateModals.product);
 });
 
 app.on(AppStateChanges.addProduct, (item: ICardData) => {
@@ -205,12 +201,10 @@ app.on(AppStateChanges.basket, () => {
 
 app.on(AppStateChanges.order, (data: TPaymentAddress) => {
     app.model.fillAddress(data);
-    app.model.openModal(AppStateModals.contacts);
 });
 
 app.on(AppStateChanges.contacts, (data: TContacts) => {
     app.model.fillContacts(data);
-    app.emit(AppStateChanges.submit);
 });
 
 app.on(AppStateChanges.submit, () => {
@@ -221,10 +215,6 @@ app.on(AppStateChanges.submit, () => {
         })
         .catch((err: string) => console.log(`Error: ${err}`));
 });
-
-app.on(AppStateChanges.success, () => {
-    app.model.openModal(AppStateModals.success);
-})
 
 api.getProducts()
     .then((products) => {

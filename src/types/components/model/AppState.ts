@@ -31,16 +31,14 @@ export enum AppStateModals {
 }
 
 export enum AppStateChanges {
-    catalog = 'change:catalog',
     modal = 'change:modal',
-    product = 'change:product',
+    catalog = 'change:catalog',
     addProduct = 'change:add',
     removeProduct = 'change:remove',
     basket = 'change:basket',
     order = 'change:order',
     contacts = 'change:contacts',
-    submit = 'change:submit',
-    success = 'change:success'
+    submit = 'change:submit'
 }
 
 //Application data model
@@ -54,7 +52,6 @@ export interface IAppState {
     orderResult: IOrderResult | null;
 
     // UI states
-    openedModal: AppStateModals;
     isOrderReady: boolean;
     modalMessage: string | null;
     isValidationError: boolean;
@@ -79,7 +76,7 @@ export interface IAppState {
 
 export interface IAppStateSettings {
 	formatCurrency(value: number): string;
-	onChange(changed: AppStateChanges): void;
+	onChange(changed: AppStateChanges, modal?: AppStateModals): void;
 }
 
 export interface IAppStateConstructor {

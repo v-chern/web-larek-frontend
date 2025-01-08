@@ -5,7 +5,6 @@ import {
     IProductCatalog,
     IOrder,
     IOrderResult,
-    ILarekAPI,
  } from "../../types/components/model/LarekApi";
 
 import { 
@@ -23,7 +22,6 @@ export class AppState implements IAppState {
     userOrder: IOrder | null = null;
     orderResult: IOrderResult | null = null;
 
-    openedModal: AppStateModals = AppStateModals.none;
     isOrderReady: boolean = false;
     modalMessage: string | null = null;
     isValidationError: boolean = false;
@@ -43,8 +41,12 @@ export class AppState implements IAppState {
         }
     }
 
-    protected notifyChanged(changed: AppStateChanges) {
-        this.settings.onChange(changed);        
+    protected notifyChanged(changed: AppStateChanges, modal?: AppStateModals) {
+        this.settings.onChange(changed, modal);        
+    }
+
+    openModal(modal: AppStateModals): void {
+        this.notifyChanged(AppStateChanges.modal, modal);
     }
 
     setProductCatalog(products: IProductCatalog): void {
@@ -55,7 +57,7 @@ export class AppState implements IAppState {
     selectProduct(id: string | null): void {
         if (!id || this.products.items.has(id)) {
             this.selectedProduct = id ? this.products.items.get(id) : null;
-            this.notifyChanged(AppStateChanges.product)
+            this.notifyChanged(AppStateChanges.modal, AppStateModals.product);
         } else {
             throw new Error (`Invalid product id: ${id}`);
         }
@@ -97,12 +99,14 @@ export class AppState implements IAppState {
 
     fillAddress(address: TPaymentAddress): void {
         this.userOrder.address = address.address;
-        this.userOrder.payment = address.payment;        
+        this.userOrder.payment = address.payment;
+        this.notifyChanged(AppStateChanges.modal, AppStateModals.contacts);     
     }
 
     fillContacts(contacts: TContacts): void {
         this.userOrder.email = contacts.email;
         this.userOrder.phone = contacts.phoneNumber;
+        this.notifyChanged(AppStateChanges.submit)
     }
 
     getOrder(): IOrder {
@@ -124,17 +128,10 @@ export class AppState implements IAppState {
     setOrderResult(result: IOrderResult): void {
         this.orderResult = result;
         this.clearOrder();
-        this.notifyChanged(AppStateChanges.success);
+        this.notifyChanged(AppStateChanges.modal, AppStateModals.success);
     }
 
     clearOrderResult(): void {
         this.orderResult = null;
-    }
-
-    openModal(modal: AppStateModals): void {
-        if (this.openedModal !== modal) {
-            this.openedModal = modal;
-            this.notifyChanged(AppStateChanges.modal);
-        }
     }
 }
