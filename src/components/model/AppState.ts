@@ -28,11 +28,9 @@ export class AppState implements IAppState {
     modalMessage: string | null = null;
     isValidationError: boolean = false;
 
-    private api: ILarekAPI;
     private settings: IAppStateSettings;
     
-    constructor(api: ILarekAPI, settings: IAppStateSettings) {
-        this.api = api;
+    constructor(settings: IAppStateSettings) {
         this.settings = settings;
 
         this.userOrder = {
@@ -49,21 +47,9 @@ export class AppState implements IAppState {
         this.settings.onChange(changed);        
     }
 
-    loadProductCatalog(): Promise<void> {
-        return this.api.getProducts()
-            .then((products) => {
-                this.products = products;
-                this.notifyChanged(AppStateChanges.catalog);
-            });
-    }
-
-    placeOrder(): Promise<void> {
-        return this.api.createOrder(this.userOrder)
-            .then((res) => {
-                this.orderResult = res;
-                this.clearOrder();
-                this.notifyChanged(AppStateChanges.success);
-            });
+    setProductCatalog(products: IProductCatalog): void {
+        this.products = products;
+        this.notifyChanged(AppStateChanges.catalog);
     }
 
     selectProduct(id: string | null): void {
@@ -132,8 +118,13 @@ export class AppState implements IAppState {
             email: '',
             phone: ''
         }
-
         this.notifyChanged(AppStateChanges.basket);
+    }
+
+    setOrderResult(result: IOrderResult): void {
+        this.orderResult = result;
+        this.clearOrder();
+        this.notifyChanged(AppStateChanges.success);
     }
 
     clearOrderResult(): void {

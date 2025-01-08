@@ -27,6 +27,10 @@ export interface Settings {
         desciption: string;
         price: string;
         button: string;
+        buttonText: {
+            active: string;
+            inactive: string;
+        }
     };
 
     basketTemplate: string;
@@ -67,6 +71,7 @@ export interface Settings {
         formatMessage: (value: number) => string;
     },
 
+    categoryClasses: Map<string, string>,
     orderErrors: {
         paymentError: string;
         addressError: string;

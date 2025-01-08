@@ -59,11 +59,8 @@ export interface IAppState {
     modalMessage: string | null;
     isValidationError: boolean;
     
-    //API actions
-    loadProductCatalog(): Promise<void>;
-    placeOrder(): Promise<void>;
-
     //Model operations 
+    setProductCatalog(products: IProductCatalog): void;
     selectProduct(id: string | null): void;
     addToBasket(id: string): void;
     removeFromBasket(id: string): void;
@@ -73,6 +70,7 @@ export interface IAppState {
     fillContacts(contats: TContacts): void;
     getOrder(): IOrder;
     clearOrder(): void;
+    setOrderResult(result: IOrderResult): void;
     clearOrderResult(): void;
 
     //UI operations
@@ -85,5 +83,5 @@ export interface IAppStateSettings {
 }
 
 export interface IAppStateConstructor {
-	new (api: ILarekAPI, settings: IAppStateSettings): IAppState;
+	new (settings: IAppStateSettings): IAppState;
 }

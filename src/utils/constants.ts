@@ -30,7 +30,11 @@ export const SETTINGS: Settings = {
         title: '.card__title',
         desciption: '.card__text',
         price: '.card__price',
-        button: '.card__button'
+        button: '.card__button',
+        buttonText: {
+            active: 'Купить',
+            inactive: 'В корзине'
+        }
     },
 
     basketTemplate: '#basket',
@@ -82,7 +86,14 @@ export const SETTINGS: Settings = {
         activeClass: 'modal_active'
     },
 
-    //form validation errors
+    //UI parametrization
+    categoryClasses: new Map<string, string> ([
+        ['софт-скил', 'card__category_soft'],
+        ['хард-скил', 'card__category_hard'],
+        ['другое', 'card__category_other'],
+        ['дополнительное', 'card__category_additional'],
+        ['кнопка', 'card__category_button']
+    ]),
     orderErrors: {
         paymentError: 'Выберите способ оплаты',
         addressError: 'Укажите адрес доставки'

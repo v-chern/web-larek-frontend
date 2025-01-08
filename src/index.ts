@@ -1,10 +1,9 @@
 import './scss/styles.scss';
 
-import { TContacts, TPaymentAddress, TPaymentType } from './types/components/model/LarekApi';
+import { IOrder, TContacts, TPaymentAddress, TPaymentType } from './types/components/model/LarekApi';
 import { AppStateChanges, AppStateModals } from './types/components/model/AppState';
 import { ModalChange } from './types/components/model/AppStateEmitter';
 import { ICardData } from './types/components/view/partial/Card';
-
 import { SETTINGS, API_URL, CDN_URL } from './utils/constants';
 
 import { LarekApi } from './components/model/LarekAPI';
@@ -19,7 +18,7 @@ import { Contacts } from './components/view/screen/Contacts';
 import { Success } from './components/view/screen/Success';
 
 const api = new LarekApi(CDN_URL, API_URL);
-const app = new AppStateEmitter(api, SETTINGS.appState, AppState);
+const app = new AppStateEmitter(AppState, SETTINGS.appState);
 
 //modals
 const page = new Page(document.body, {
@@ -95,6 +94,8 @@ app.on(AppStateModals.product, () => {
     const item = app.model.selectedProduct;
     const card = new Card(SETTINGS.cardPreviewTemplate, {
         ...SETTINGS.cardPreviewSettings,
+        categoryClasses: SETTINGS.categoryClasses,
+        formatCurrency: SETTINGS.appState.formatCurrency,
         onClick: () => {
             app.emit(AppStateChanges.addProduct, item);
             modal.close();
@@ -106,27 +107,13 @@ app.on(AppStateModals.product, () => {
             category: item.category,
             description: item.description,
             image: item.image,
-            price: SETTINGS.appState.formatCurrency(item.price)
+            price: item.price,
+            isActive: !app.model.getOrder().items.includes(item.id)
         })
     });
  });
 
 app.on(AppStateModals.basket, () => {
-    basket.items = app.model.getBasketItems().map((item, idx) => {
-        const card = new Card(SETTINGS.cardBasketTemplate, {
-            ...SETTINGS.cardBasketSettings,
-            onClick: () => {
-                app.emit(AppStateChanges.removeProduct, item);
-            }
-        });
-        return card.render({
-            id: item.id,
-            basketIndex: String(idx + 1),
-            title: item.title,
-            price: SETTINGS.appState.formatCurrency(item.price)
-        });
-    });
-    basket.total = SETTINGS.appState.formatCurrency(app.model.getBasketTotal());
     modal.render({ content: basket.render() });
  });
 
@@ -168,6 +155,8 @@ app.on(AppStateChanges.catalog, () => {
     page.catalog = Array.from(app.model.products.items.values()).map((item) => {
         const card = new Card(SETTINGS.cardTemplate, {
             ...SETTINGS.cardSettings,
+            categoryClasses: SETTINGS.categoryClasses,
+            formatCurrency: SETTINGS.appState.formatCurrency,
             onClick: () => {
                 app.model.selectProduct(item.id);
             }
@@ -177,7 +166,7 @@ app.on(AppStateChanges.catalog, () => {
             category: item.category,
             title: item.title,
             image: item.image,
-            price: SETTINGS.appState.formatCurrency(item.price)
+            price: item.price
         });
     });
 });
@@ -195,10 +184,23 @@ app.on(AppStateChanges.removeProduct, (item: ICardData) => {
 });
 
 app.on(AppStateChanges.basket, () => {
+    basket.items = app.model.getBasketItems().map((item, idx) => {
+        const card = new Card(SETTINGS.cardBasketTemplate, {
+            ...SETTINGS.cardBasketSettings,
+            formatCurrency: SETTINGS.appState.formatCurrency,
+            onClick: () => {
+                app.emit(AppStateChanges.removeProduct, item);
+            }
+        });
+        return card.render({
+            id: item.id,
+            basketIndex: String(idx + 1),
+            title: item.title,
+            price: item.price
+        });
+    });
+    basket.total = SETTINGS.appState.formatCurrency(app.model.getBasketTotal());
     page.counter = app.model.getBasketItems().length;
-    if (app.model.openedModal === AppStateModals.basket) {
-        app.emit(AppStateModals.basket);
-    }
 });
 
 app.on(AppStateChanges.order, (data: TPaymentAddress) => {
@@ -212,14 +214,20 @@ app.on(AppStateChanges.contacts, (data: TContacts) => {
 });
 
 app.on(AppStateChanges.submit, () => {
-    app.model.placeOrder();
+    const order: IOrder = app.model.getOrder();
+    api.createOrder(order)
+        .then ((res) => {
+            app.model.setOrderResult(res);
+        })
+        .catch((err: string) => console.log(`Error: ${err}`));
 });
 
 app.on(AppStateChanges.success, () => {
     app.model.openModal(AppStateModals.success);
 })
 
-app.model
-    .loadProductCatalog()
-    .then(() => {})
+api.getProducts()
+    .then((products) => {
+        app.model.setProductCatalog(products);
+    })
     .catch((err: string) => console.log(`Error: ${err}`));

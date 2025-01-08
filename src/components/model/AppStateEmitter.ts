@@ -14,12 +14,11 @@ export class AppStateEmitter extends EventEmitter {
     protected previousModal: AppStateModals = AppStateModals.none;
 
     constructor (
-        api: ILarekAPI,
-        settings: Omit<IAppStateSettings, 'onChange'>,
-        Model: IAppStateConstructor
+        Model: IAppStateConstructor,
+        settings: Omit<IAppStateSettings, 'onChange'>
     ) {
         super();
-        this.model = new Model(api, {
+        this.model = new Model({
             ...settings,
             onChange: this.onModelChange.bind(this)
         });

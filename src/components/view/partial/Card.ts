@@ -3,6 +3,7 @@ import { ensureElement, cloneTemplate} from "../../../utils/utils";
 import { Component } from "../../base/Component";
 
 export class Card extends Component<ICardData> {
+    protected _settings: ICardSettings; 
     protected _title: HTMLElement;
     protected _price: HTMLElement;
     protected _image?: HTMLImageElement;
@@ -25,9 +26,12 @@ export class Card extends Component<ICardData> {
 
         if (this._button) {
             this._button.addEventListener('click', settings.onClick);
+            this.setText(this._button, settings.buttonText.active);
         } else {
             container.addEventListener('click', settings.onClick);
         }
+
+        this._settings = settings;
     }
 
     set id(value: string) {
@@ -51,11 +55,19 @@ export class Card extends Component<ICardData> {
     }
     
     set category(value: string) {
+        const categoryClass = this._settings.categoryClasses.get(value);
         this.setText(this._category, value);
+        this._settings.categoryClasses.forEach((value) => {
+            this.toggleClass(this._category, value, false);
+        })
+        this.toggleClass(this._category, categoryClass, true);
     }
 
-    set price(value: string) {
-        this.setText(this._price, value);
+    set price(value: number) {
+        if (!value) {
+            this.setDisabled(this._button, true);
+        }
+        this.setText(this._price, this._settings.formatCurrency(value));
     }
 
     set image(value: string) {
@@ -71,6 +83,13 @@ export class Card extends Component<ICardData> {
             }));
         } else {
             this.setText(this._description, value);
+        }
+    }
+
+    set isActive(value: boolean) {
+        if (!value) {
+            this.setText(this._button, this._settings.buttonText.inactive);
+            this.setDisabled(this._button, true);
         }
     }
 }
